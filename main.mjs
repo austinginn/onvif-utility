@@ -21,11 +21,12 @@ console.log("keybinds.json loaded");
 
 //Global Constants
 const eventEmitter = new EventEmitter();
-const VELOCITY = .01; // multiply by -1 depending on direction --- this is minimum value supported
+const VELOCITY_INC = .05; //amount velocity is incremented or decremented
 const MAX_CONNECTION_ATTEMPTS = 5;
 
 //Globals
 let selected = 1; //current selected camera id -- default to 1
+let velocity = .01; //multiply by -1 depending on direction --- this is minimum value supported
 
 //Main because async...
 const main = async () => {
@@ -75,7 +76,7 @@ const connect = async (ip = "192.168.1.1", port = 2000, user = "admin", pass = "
 
 
     if (!cam.ptz) { throw err } //ptz controls not supported by camera -- reconnect attempt?
-    
+
     eventEmitter.on("camera_" + id, async (cmd) => {
         let vector = { x: 0, y: 0, z: 0 } //no movement
         try {
@@ -84,19 +85,19 @@ const connect = async (ip = "192.168.1.1", port = 2000, user = "admin", pass = "
                     await cam.ptz.stop();
                     break;
                 case "left":
-                    vector = { x: VELOCITY * -1, y: 0, z: 0 }; //left
+                    vector = { x: velocity * -1, y: 0, z: 0 }; //left
                     await cam.ptz.continuousMove(null, vector);
                     break;
                 case "right":
-                    vector = { x: VELOCITY, y: 0, z: 0 }; //right
+                    vector = { x: velocity, y: 0, z: 0 }; //right
                     await cam.ptz.continuousMove(null, vector);
                     break;
                 case "up":
-                    vector = { x: 0, y: VELOCITY, z: 0 }; //up
+                    vector = { x: 0, y: velocity, z: 0 }; //up
                     await cam.ptz.continuousMove(null, vector);
                     break;
                 case "down":
-                    vector = { x: 0, y: VELOCITY * -1, z: 0 }; //up
+                    vector = { x: 0, y: velocity * -1, z: 0 }; //up
                     await cam.ptz.continuousMove(null, vector);
                     break;
                 default:
@@ -161,10 +162,44 @@ const control = () => {
                 console.log("Commanding Cam " + selected + " to stop");
                 hault(selected);
                 break;
+            case keybinds.incVelocity: //Increment Velocity
+                console.log("Current Velocity: " + velocity);
+                velocityInc();
+                break;
+            case keybinds.decVelocity: //Decrement Velocity
+                console.log("Current Velocity: " + velocity);
+                velocityDec();
+                break;
             default:
                 console.log("key not assigned");
         }
     });
+}
+
+const velocityInc = () => {
+    velocity += VELOCITY_INC;
+    if(velocity >= 1){
+        velocity = 1;
+        return 0;
+    }
+
+    if(velocity <= 0){
+        velocity = .01;
+        return 0;
+    }
+}
+
+const velocityDec = () => {
+    velocity -= VELOCITY_INC;
+    if(velocity <= 0){
+        velocity = .01;
+        return 0;
+    }
+
+    if(velocity >= 1){
+        velocity = 1;
+        return 0;
+    }
 }
 
 //Fire ptz event

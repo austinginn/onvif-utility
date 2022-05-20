@@ -7,5 +7,7 @@
     "panLeft": "a",
     "panRight": "d",
     "tiltUp": "w",
-    "tiltDown": "s"
+    "tiltDown": "s",
+    "incVelocity": "=",
+    "decVelocity": "-"
 }
