@@ -57,10 +57,11 @@ const main = async () => {
 //test disconnect cases and then handle them in a catch block for reconnect functionality
 const connect = async (ip = "192.168.1.1", port = 2000, user = "admin", pass = "admin", id = "1", attempt = 0) => {
     //connect
+    let cam;
     try {
-        let onvif = new OnvifManager; //documentation not clear if this actually handles multiple connections of if you need a seperate object for each connection
-        let cam = await onvif.connect(ip, port, user, pass);
-        console.log(cam);
+        // let onvif = new OnvifManager; //documentation not clear if this actually handles multiple connections of if you need a seperate object for each connection
+        cam = await OnvifManager.connect(ip, port, user, pass);
+        // console.log(cam);
     } catch (err) { //catch block for initial onvif connection failure
         attempt++;
         console.log(ip + ":" + port + " | Connection attempt #" + attempt);
@@ -72,8 +73,9 @@ const connect = async (ip = "192.168.1.1", port = 2000, user = "admin", pass = "
 
     eventEmitter.emit("message", "Camera " + id + ": Connected!");
 
-    if (!cam.ptz) { throw err } //ptz controls not supported by camera -- reconnect attempt?
 
+    if (!cam.ptz) { throw err } //ptz controls not supported by camera -- reconnect attempt?
+    
     eventEmitter.on("camera_" + id, async (cmd) => {
         let vector = { x: 0, y: 0, z: 0 } //no movement
         try {
@@ -82,11 +84,11 @@ const connect = async (ip = "192.168.1.1", port = 2000, user = "admin", pass = "
                     await cam.ptz.stop();
                     break;
                 case "left":
-                    vector = { x: VELOCITY, y: 0, z: 0 }; //left
+                    vector = { x: VELOCITY * -1, y: 0, z: 0 }; //left
                     await cam.ptz.continuousMove(null, vector);
                     break;
                 case "right":
-                    vector = { x: VELOCITY * -1, y: 0, z: 0 }; //right
+                    vector = { x: VELOCITY, y: 0, z: 0 }; //right
                     await cam.ptz.continuousMove(null, vector);
                     break;
                 case "up":
@@ -149,7 +151,7 @@ const control = () => {
                 break;
             case keybinds.tiltDown: //tilt down
                 console.log("Commanding Cam " + selected + " to tilt down");
-                ptz(selected, "up");
+                ptz(selected, "down");
                 break;
             case keybinds.stopAll: //STOP ALL
                 console.log("Commanding all cams to stop");
@@ -174,9 +176,9 @@ const ptz = (camera = 1, direction = "left") => {
 //Fire stop event
 const hault = (camera = 0) => {
     if (camera == 0) {
-        for(let i = 0; i < cameras.length; i++){
+        for (let i = 0; i < cameras.length; i++) {
             let id = cameras[i].id;
-            eventEmitter.emit("camera_" + id , "stop");
+            eventEmitter.emit("camera_" + id, "stop");
         }
     } else {
         eventEmitter.emit("camera_" + camera, "stop");
