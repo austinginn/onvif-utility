@@ -1,0 +1,22 @@
+[{
+    "id": 1,
+    "name": "Cam1",
+    "ip": "192.168.5.163",
+    "port": 2000,
+    "user": "admin",
+    "pass": "admin"
+}, {
+    "id": 2,
+    "name": "Cam2",
+    "ip": "192.168.5.164",
+    "port": 2000,
+    "user": "admin",
+    "pass": "admin"
+}, {
+    "id": 3,
+    "name": "Cam3",
+    "ip": "192.168.5.165",
+    "port": 2000,
+    "user": "admin",
+    "pass": "admin"
+}]

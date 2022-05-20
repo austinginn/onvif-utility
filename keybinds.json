@@ -1,0 +1,11 @@
+{
+    "stop": "x",
+    "stopAll": "z",
+    "cam1": "1",
+    "cam2": "2",
+    "cam3": "3",
+    "panLeft": "a",
+    "panRight": "d",
+    "tiltUp": "w",
+    "tiltDown": "s"
+}
