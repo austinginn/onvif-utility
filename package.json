@@ -1,0 +1,22 @@
+{
+  "name": "onvif-utility",
+  "version": "1.0.0",
+  "description": "a collection of onvif utilities",
+  "main": "testing.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/austinginn/onvif-utility.git"
+  },
+  "author": "Austin Ginn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/austinginn/onvif-utility/issues"
+  },
+  "homepage": "https://github.com/austinginn/onvif-utility#readme",
+  "dependencies": {
+    "onvif-nvt": "^0.3.3"
+  }
+}
