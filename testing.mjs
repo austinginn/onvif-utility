@@ -174,9 +174,10 @@ const ptz = (camera = 1, direction = "left") => {
 //Fire stop event
 const hault = (camera = 0) => {
     if (camera == 0) {
-        eventEmitter.emit("camera_" + 1, "stop");
-        eventEmitter.emit("camera_" + 2, "stop");
-        eventEmitter.emit("camera_" + 3, "stop");
+        for(let i = 0; i < cameras.length; i++){
+            let id = cameras[i].id;
+            eventEmitter.emit("camera_" + id , "stop");
+        }
     } else {
         eventEmitter.emit("camera_" + camera, "stop");
     }
