@@ -1,13 +1,13 @@
 {
-    "stop": "x",
-    "stopAll": "z",
-    "cam1": "1",
-    "cam2": "2",
-    "cam3": "3",
-    "panLeft": "a",
-    "panRight": "d",
-    "tiltUp": "w",
-    "tiltDown": "s",
-    "incVelocity": "=",
-    "decVelocity": "-"
+    "stop": 16,
+    "stopAll": 18,
+    "cam1": 2,
+    "cam2": 3,
+    "cam3": 4,
+    "panLeft": 30,
+    "panRight": 32,
+    "tiltUp": 17,
+    "tiltDown": 31,
+    "incVelocity": 13,
+    "decVelocity": 12
 }
