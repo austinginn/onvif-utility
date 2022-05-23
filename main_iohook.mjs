@@ -9,7 +9,8 @@
 import EventEmitter from 'events';
 import OnvifManager from 'onvif-nvt';
 import fs from 'fs';
-import { uIOhook, UiohookKey } from 'uiohook-napi';
+import ioHook from 'iohook';
+// import { uIOhook, UiohookKey } from 'uiohook-napi';
 
 //load config files
 let rawdata = fs.readFileSync('cameras.json');
@@ -111,10 +112,10 @@ const connect = async (ip = "192.168.1.1", port = 2000, user = "admin", pass = "
 //keyboard input handling
 const control = () => {
     //init iohook
-    uIOhook.start();
+    ioHook.start();
 
     //on any keydown
-    uIOhook.on('keydown',  (key) => {
+    ioHook.on('keydown',  (key) => {
         console.log(key);
 
         switch (key.keycode) {

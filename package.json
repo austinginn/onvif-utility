@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/austinginn/onvif-utility#readme",
   "dependencies": {
+    "iohook": "^0.9.3",
     "onvif-nvt": "^0.3.3",
     "uiohook-napi": "^1.1.0"
   }
