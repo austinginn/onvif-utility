@@ -44,9 +44,13 @@ const keypadProfile = {
     },
 }
 
-// Establish connection with the keypad device
-// See function comments for connection retry info.
-init();
+
+
+main();
+
+async function main() {
+    await init();
+}
 
 // This function is used to initialize the connection to the keypad device.
 // Sometimes other application/OS takes control of the device
@@ -83,6 +87,9 @@ function init() {
             clearTimeout(timer);
             confirmed = true;
             console.log('Application control confirmed!');
+            return new Promise((resolve, reject) => {
+                resolve('control');
+            });
         } else {
             console.log('Key released:', key);
         }
