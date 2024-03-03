@@ -50,6 +50,7 @@ main();
 
 async function main() {
     await init();
+    console.log("I waited for connection");
 }
 
 // This function is used to initialize the connection to the keypad device.
