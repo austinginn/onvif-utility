@@ -1,4 +1,6 @@
+import { processSlotOutlet } from '@vue/compiler-core';
 import KeyPad from './main_hid.mjs';
+import ViscaController from './visca.mjs';
 
 let confirmed = false;
 let device = null;
@@ -44,13 +46,48 @@ const keypadProfile = {
     },
 }
 
+const cameraConfig = [
+    { 
+        name: "Left Cam",
+        ip: "",
+        port: 52381
+    },
+    {
+        name: "Right Cam",
+        ip: "",
+        port: 52381
+    },
+    {
+        name: "Mid Cam",
+        ip: "",
+        port: 52381
+    }
+]
+
 
 
 main();
 
 async function main() {
     await init();
-    console.log("I waited for connection");
+    console.log("HID connection established.");
+    console.log("Connecting to cameras");
+    for(let i = 0; i < cameraConfig.length; i++ ){
+        cameraConfig[i].camera = new ViscaController(cameraConfig[i].ip, cameraConfig[i].port);
+        
+        //listeners
+        cameraConfig[i].camera.on('response', (msg, rinfo) => {
+            console.log(`Received response from ${rinfo.address}:${rinfo.port}: ${msg}`);
+        });
+
+        cameraConfig[i].camera.on('error', (err) => {
+            console.error('An error occurred:', err);
+        });
+
+        cameraConfig[i].camera.on('commandSent', (command) => {
+            console.log('Command sent successfully:', command);
+        });
+    }
 }
 
 // This function is used to initialize the connection to the keypad device.
