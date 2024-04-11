@@ -13,7 +13,8 @@ class ViscaController extends EventEmitter {
 
         // Event listener for receiving responses
         this.socket.on('message', (msg, rinfo) => {
-            this.emit('response', msg, rinfo);
+            const hexResponse = msg.toString('hex'); // Convert binary response to hexadecimal string
+            this.emit('response', hexResponse, rinfo);
         });
     }
 
@@ -30,9 +31,10 @@ class ViscaController extends EventEmitter {
     }
 
     // Function to recall a specific preset
+    //81 01 04 3F 02 pp FF
     recallPreset(presetNumber) {
         const presetHex = presetNumber.toString(16).padStart(2, '0'); // Convert preset number to hexadecimal string
-        const viscaCommand = `81010447${presetHex}FF`; // Visca command to recall preset
+        const viscaCommand = `8101043F02${presetHex}FF`; // Visca command to recall preset
         this.sendViscaCommand(viscaCommand);
     }
 

@@ -1,4 +1,3 @@
-import { processSlotOutlet } from '@vue/compiler-core';
 import KeyPad from './main_hid.mjs';
 import ViscaController from './visca.mjs';
 
@@ -47,22 +46,29 @@ const keypadProfile = {
 }
 
 const cameraConfig = [
-    { 
+    {
+        name: "Mid Cam",
+        ip: "192.168.5.163",
+        port: 52381
+    },
+    {
         name: "Left Cam",
-        ip: "",
+        ip: "192.168.5.164",
         port: 52381
     },
     {
         name: "Right Cam",
-        ip: "",
-        port: 52381
-    },
-    {
-        name: "Mid Cam",
-        ip: "",
+        ip: "192.168.5.165",
         port: 52381
     }
 ]
+
+let selected = 1;
+let run = true;
+let selectedPreset = 1;
+let selectedRunCamera = 1;
+let modifier = false;
+let save = false;
 
 
 
@@ -72,9 +78,9 @@ async function main() {
     await init();
     console.log("HID connection established.");
     console.log("Connecting to cameras");
-    for(let i = 0; i < cameraConfig.length; i++ ){
+    for (let i = 0; i < cameraConfig.length; i++) {
         cameraConfig[i].camera = new ViscaController(cameraConfig[i].ip, cameraConfig[i].port);
-        
+
         //listeners
         cameraConfig[i].camera.on('response', (msg, rinfo) => {
             console.log(`Received response from ${rinfo.address}:${rinfo.port}: ${msg}`);
@@ -117,9 +123,242 @@ function init() {
             return;
         } else {
             console.log('Key pressed:', key);
+
+            //switch on each keypress
+            switch (key) {
+                case 'subtract':
+                    //AF
+                    //81 01 04 38 03 FF
+                    if (modifier) {
+                        for (let i = 0; i < cameraConfig.length; i++) {
+                            console.log('Auto Focus:', cameraConfig[i].name);
+                            cameraConfig[i].camera.sendViscaCommand('8101043802FF');
+                        }
+                    } else {
+                        console.log('Auto Focus:', cameraConfig[selected - 1].name);
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101043802FF');
+                    }
+                    break;
+                case 'add':
+                    //one push AF
+                    //8101043804FF
+                    if (modifier) {
+                        for (let i = 0; i < cameraConfig.length; i++) {
+                            console.log('One Push Focus:', cameraConfig[i].name);
+                            cameraConfig[i].camera.sendViscaCommand('8101043804FF');
+                        }
+                    } else {
+                        console.log('One Push Focus:', cameraConfig[selected - 1].name);
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101043804FF');
+                    }
+                    break;
+                case 'home':
+                    if (modifier) {
+                        for (let i = 0; i < cameraConfig.length; i++) {
+                            console.log('Go Home:', cameraConfig[i].name);
+                            cameraConfig[i].camera.sendViscaCommand('81010604FF');
+                        }
+                    } else {
+                        console.log('Go Home:', cameraConfig[selected - 1].name);
+                        cameraConfig[selected - 1].camera.sendViscaCommand('81010604FF');
+                    }
+                    break;
+                case 'upArrow':
+                    //81 01 06 01 VV WW 03 01 FF
+                    cameraConfig[selected - 1].camera.sendViscaCommand('8101060101010301FF');
+                    break;
+                case 'downArrow':
+                    //81 01 06 01 VV WW 03 02 FF
+                    cameraConfig[selected - 1].camera.sendViscaCommand('8101060101010302FF');
+                    break;
+                case 'leftArrow':
+                    //81 01 06 01 VV WW 01 03 FF
+                    cameraConfig[selected - 1].camera.sendViscaCommand('8101060101010103FF');
+                    break;
+                case 'rightArrow':
+                    //81 01 06 01 VV WW 02 03 FF
+                    cameraConfig[selected - 1].camera.sendViscaCommand('8101060101010203FF');
+                    break;
+                case 'end':
+                    if (modifier) {
+                        for (let i = 0; i < cameraConfig.length; i++) {
+                            console.log('Stopping Camera:', cameraConfig[i].name);
+                            cameraConfig[i].camera.sendViscaCommand('8101060101010303FF');
+                            //stop zoom
+                            cameraConfig[i].camera.sendViscaCommand('8101040700FF');
+                        }
+                    } else {
+                        console.log('Stopping Camera:', cameraConfig[selected - 1].name);
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101060101010303FF');
+                        //stop zoom
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101040700FF');
+                    }
+                    break;
+                case 'period':
+                    run = !run;
+                    break;
+                case 'enter':
+                    cameraConfig[selectedRunCamera - 1].camera.recallPreset(selectedPreset);
+                    break;
+                case 'numLock':
+                    selected = 1;
+                    break;
+                case 'divide':
+                    selected = 2;
+                    break;
+                case 'multiply':
+                    selected = 3;
+                    break;
+                case 'one':
+                    if (save) {
+                        //save preset
+                        //81 01 04 3F 01 pp FF
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101043F0101FF');
+                        break;
+                    }
+                    if (run) {
+                        cameraConfig[selected - 1].camera.recallPreset(1);
+                    } else {
+                        selectedPreset = 1;
+                        selectedRunCamera = selected;
+                    }
+                    break;
+                case 'two':
+                    if (save) {
+                        //save preset
+                        //81 01 04 3F 01 pp FF
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101043F0102FF');
+                        break;
+                    }
+                    if (run) {
+                        cameraConfig[selected - 1].camera.recallPreset(2);
+                    } else {
+                        selectedPreset = 2;
+                        selectedRunCamera = selected;
+                    }
+                    break;
+                case 'three':
+                    if (save) {
+                        //save preset
+                        //81 01 04 3F 01 pp FF
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101043F0103FF');
+                        break;
+                    }
+                    if (run) {
+                        cameraConfig[selected - 1].camera.recallPreset(3);
+                    } else {
+                        selectedPreset = 3;
+                        selectedRunCamera = selected;
+                    }
+                    break;
+                case 'four':
+                    if (save) {
+                        //save preset
+                        //81 01 04 3F 01 pp FF
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101043F0104FF');
+                        break;
+                    }
+                    if (run) {
+                        cameraConfig[selected - 1].camera.recallPreset(4);
+                    } else {
+                        selectedPreset = 4;
+                        selectedRunCamera = selected;
+                    }
+                    break;
+                case 'five':
+                    if (save) {
+                        //save preset
+                        //81 01 04 3F 01 pp FF
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101043F0105FF');
+                        break;
+                    }
+                    if (run) {
+                        cameraConfig[selected - 1].camera.recallPreset(5);
+                    }
+                    else {
+                        selectedPreset = 5;
+                        selectedRunCamera = selected;
+                    }
+                    break;
+                case 'six':
+                    if (save) {
+                        //save preset
+                        //81 01 04 3F 01 pp FF
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101043F0106FF');
+                        break;
+                    }
+                    if (run) {
+                        cameraConfig[selected - 1].camera.recallPreset(6);
+                    } else {
+                        selectedPreset = 6;
+                        selectedRunCamera = selected;
+                    }
+                    break;
+                case 'seven':
+                    if (save) {
+                        //save preset
+                        //81 01 04 3F 01 pp FF
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101043F0107FF');
+                        break;
+                    }
+                    if (run) {
+                        cameraConfig[selected - 1].camera.recallPreset(7);
+                    } else {
+                        selectedPreset = 7;
+                        selectedRunCamera = selected;
+                    }
+                    break;
+                case 'eight':
+                    if (save) {
+                        //save preset
+                        //81 01 04 3F 01 pp FF
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101043F0108FF');
+                        break;
+                    }
+                    if (run) {
+                        cameraConfig[selected - 1].camera.recallPreset(8);
+                    } else {
+                        selectedPreset = 8;
+                        selectedRunCamera = selected;
+                    }
+                    break;
+                case 'nine':
+                    if (save) {
+                        //save preset
+                        //81 01 04 3F 01 pp FF
+                        cameraConfig[selected - 1].camera.sendViscaCommand('8101043F0109FF');
+                        break;
+                    }
+                    if (run) {
+                        cameraConfig[selected - 1].camera.recallPreset(9);
+                    } else {
+                        selectedPreset = 9;
+                        selectedRunCamera = selected;
+                    }
+                    break;
+                case 'tab':
+                    modifier = true;
+                    break;
+                case 'pgUp':
+                    //zoom in
+                    //81 01 04 07 2p FF
+                    cameraConfig[selected - 1].camera.sendViscaCommand('8101040720FF');
+                    break;
+                case 'pgDown':
+                    //zoom out
+                    //81 01 04 07 3p FF
+                    cameraConfig[selected - 1].camera.sendViscaCommand('8101040730FF');
+                    break;
+                case 'zero':
+                    //save modifier
+                    save = true;
+                    console.log('Save modifier:', save);
+                    break;
+                default:
+                    break;
+            }
         }
     });
-
     device.on('keyrelease', key => {
         if (!confirmed) {
             clearTimeout(timer);
@@ -130,8 +369,19 @@ function init() {
             });
         } else {
             console.log('Key released:', key);
+            switch (key) {
+                case 'tab':
+                    modifier = false;
+                    break;
+                case 'zero':
+                    save = false;
+                    console.log('Save modifier:', save);
+                    break;
+                default:
+                    break
+            }
         }
     });
-    
+
     device.connect();
 }
