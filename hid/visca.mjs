@@ -1,6 +1,8 @@
 import { createSocket } from 'dgram';
 import { EventEmitter } from 'events';
 
+//generic visca ip class
+
 class ViscaController extends EventEmitter {
     constructor(ipAddress, port) {
         super();
