@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/austinginn/onvif-utility#readme",
   "dependencies": {
+    "atem-connection": "^3.5.0",
     "node-hid": "^3.0.0",
     "onvif-nvt": "^0.3.3",
     "uiohook-napi": "^1.1.0"
