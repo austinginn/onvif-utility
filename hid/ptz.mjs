@@ -5,6 +5,7 @@ import { Atem } from 'atem-connection';
 let confirmed = false;
 let device = null;
 let timer = null;
+const atem = new Atem();
 
 const keypadProfile = {
     vendorId: 9614,
@@ -395,7 +396,6 @@ function init() {
     device.connect();
 }
 function initAtem() {
-    const atem = new Atem();
 
     atem.on('error', console.error);
 
