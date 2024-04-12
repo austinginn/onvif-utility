@@ -6,13 +6,22 @@ class PanasonicController extends EventEmitter {
         this.url = `http://${ipAddress}/cgi-bin/aw_ptz?cmd=`
     }
 
+    //for commands not included in class
+    //see https://eww.pass.panasonic.co.jp/pro-av/support/content/guide/DEF/HE50_120_IP/HDIntegratedCamera_InterfaceSpecifications-E.pdf
+    async sendCommand(cmd){
+        const res = await fetch(`${this.url}${cmd}&res=1`)
+    }
+
     // Function to recall a specific preset
-    //81 01 04 3F 02 pp FF
     async recallPresest(presetNumber) {
         const res = await fetch(`${this.url}%23R${presetNumber}&res=1`);
         //check status
 
         //return result
+    }
+
+    async setPreset(presetNumber) {
+        const res = await fetch(`${this.url}%23M${presetNumber}&res=1`)
     }
 
     async panLeft(speed) {
