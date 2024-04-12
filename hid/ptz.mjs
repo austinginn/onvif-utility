@@ -1,5 +1,6 @@
 import KeyPad from './main_hid.mjs';
 import ViscaController from './visca.mjs';
+import { Atem } from 'atem-connection';
 
 let confirmed = false;
 let device = null;
@@ -69,6 +70,7 @@ let selectedPreset = 1;
 let selectedRunCamera = 1;
 let modifier = false;
 let save = false;
+const switcherIP = "192.168.40.12";
 
 
 
@@ -78,6 +80,7 @@ async function main() {
     await init();
     console.log("HID connection established.");
     console.log("Connecting to cameras");
+    
     for (let i = 0; i < cameraConfig.length; i++) {
         cameraConfig[i].camera = new ViscaController(cameraConfig[i].ip, cameraConfig[i].port);
 
@@ -94,6 +97,9 @@ async function main() {
             console.log('Command sent successfully:', command);
         });
     }
+
+    console.log("Connecting to ATEM");
+    initAtem();
 }
 
 // This function is used to initialize the connection to the keypad device.
@@ -202,12 +208,15 @@ function init() {
                     break;
                 case 'numLock':
                     selected = 1;
+                    atem.setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 18 }, 0);
                     break;
                 case 'divide':
                     selected = 2;
+                    atem.setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 19 }, 0);
                     break;
                 case 'multiply':
                     selected = 3;
+                    atem.setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 20 }, 0);
                     break;
                 case 'one':
                     if (save) {
@@ -384,4 +393,15 @@ function init() {
     });
 
     device.connect();
+}
+function initAtem() {
+    const atem = new Atem();
+
+    atem.on('error', console.error);
+
+    atem.connect(switcherIP);
+
+    atem.on('connected', () => {
+        console.log('Connected to ATEM');
+    });
 }
