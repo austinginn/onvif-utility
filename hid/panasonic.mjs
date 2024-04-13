@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+//see https://eww.pass.panasonic.co.jp/pro-av/support/content/guide/DEF/HE50_120_IP/HDIntegratedCamera_InterfaceSpecifications-E.pdf
 
 class PanasonicController extends EventEmitter {
     constructor(ipAddress) {
@@ -7,21 +8,32 @@ class PanasonicController extends EventEmitter {
     }
 
     //for commands not included in class
-    //see https://eww.pass.panasonic.co.jp/pro-av/support/content/guide/DEF/HE50_120_IP/HDIntegratedCamera_InterfaceSpecifications-E.pdf
     async sendCommand(cmd){
         const res = await fetch(`${this.url}${cmd}&res=1`)
+        if(!res.ok){
+            console.error(`HTTP error! status: ${res.status}`);
+            return false;
+        }
+        return true;
     }
 
     // Function to recall a specific preset
     async recallPresest(presetNumber) {
         const res = await fetch(`${this.url}%23R${presetNumber}&res=1`);
-        //check status
-
-        //return result
+        if(!res.ok){
+            console.error(`HTTP error! status: ${res.status}`);
+            return false;
+        }
+        return true;
     }
 
     async setPreset(presetNumber) {
         const res = await fetch(`${this.url}%23M${presetNumber}&res=1`)
+        if(!res.ok){
+            console.error(`HTTP error! status: ${res.status}`);
+            return false;
+        }
+        return true;
     }
 
     async panLeft(speed) {
@@ -31,9 +43,11 @@ class PanasonicController extends EventEmitter {
         pSpeed = speed.toString().padStart(2, '0');
 
         const res = await fetch(`${this.url}%23P${pSpeed}&res=1`);
-        //check status
-
-        //return result
+        if(!res.ok){
+            console.error(`HTTP error! status: ${res.status}`);
+            return false;
+        }
+        return true;
     }
 
     async panRight(speed) {
@@ -41,6 +55,11 @@ class PanasonicController extends EventEmitter {
         pSpeed = Math.ceil(pSpeed * (99 - 51) / 100) + 51;
 
         const res = await fetch(`${this.url}%23P${pSpeed}&res=1`);
+        if(!res.ok){
+            console.error(`HTTP error! status: ${res.status}`);
+            return false;
+        }
+        return true;
     }
 
     async tiltDown(speed) {
@@ -50,6 +69,11 @@ class PanasonicController extends EventEmitter {
         pSpeed = speed.toString().padStart(2, '0');
 
         const res = await fetch(`${this.url}%23T${pSpeed}&res=1`);
+        if(!res.ok){
+            console.error(`HTTP error! status: ${res.status}`);
+            return false;
+        }
+        return true;
     }
 
     async tiltUp(speed) {
@@ -57,10 +81,20 @@ class PanasonicController extends EventEmitter {
         pSpeed = Math.ceil(pSpeed * (99 - 51) / 100) + 51;
 
         const res = await fetch(`${this.url}%23T${pSpeed}&res=1`);
+        if(!res.ok){
+            console.error(`HTTP error! status: ${res.status}`);
+            return false;
+        }
+        return true;
     }
 
     async stop() {
         const res = await fetch(`${this.url}%23PTS5050&res=1`);
+        if(!res.ok){
+            console.error(`HTTP error! status: ${res.status}`);
+            return false;
+        }
+        return true;
     }
 }
 

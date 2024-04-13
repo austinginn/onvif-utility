@@ -4,24 +4,52 @@ import { Atem } from 'atem-connection';
 
 import { keypadConfig } from './config/keypadConfig.mjs';
 import { cameraConfig } from './config/cameraConfig.mjs';
+import vbProfile from './profiles/vbProfile.mjs';
 
-switcherIP = '192.168.40.12';
+main({
+    atemSwitchers: [
+        '192.168.40.12'
+    ],
+    latencyCalcInterval: 30000,
+    profile: vbProfile,
+    keypadConfig,
+    cameraProtocol: 'VISCA',
+    cameraConfig
+});
 
-
-main();
-
-async function main() {
+async function main({ atemSwitchers, latencyCalcInterval, profile, keypadConfig, cameraConfig, cameraProtocol}) {
+    //init async devices
     console.log('Initializing devices...');
 
-    const [ HID, ATEM] = await Promise.all([
-        initHID(),
-        initAtem()
+    const [HID, ATEM] = await Promise.all([
+        initHID(keypadConfig),
+        initAtem(atemSwitchers[0])
     ]);
 
     //init visca
-    const CAMERAS = initVisca();
+    const CAMERAS = initVisca(cameraConfig);
+
+    //init profile
+    const profile = new profile();
 
     console.log('Devices initialized!');
+    console.log('Starting listeners...');
+    console.log('Starting profile latency...');
+
+    ///////////////
+    //Profile latency
+    ///////////////
+    let latency;
+    let latencies = [];
+
+    setInterval(() => {
+        // Calculate the average latency
+        const averageLatency = latencies.reduce((a, b) => a + b, 0) / latencies.length;
+        console.log(`Average Profile Execution Latency: ${averageLatency}ms `);
+        // Clear the latencies array
+        latencies = [];
+    }, latencyCalcInterval);
+
 
     ///////////////
     //HID listeners
@@ -32,10 +60,17 @@ async function main() {
 
     const keypressHandler = key => {
         console.log('Key pressed:', key);
+        const start = Date.now();
+        profile.handleKeypress(ATEM, CAMERAS, key);
+        const end = Date.now();
+
+        latency = end - start;
+        latencies.push(latency);
     }
 
     const keyreleaseHandler = key => {
         console.log('Key released:', key);
+        profile.handleKeyrelease(ATEM, CAMERAS, key);
     }
 
     HID.on('error', errorHandlerHID);
@@ -53,7 +88,7 @@ async function main() {
 }
 
 
-async function initHID() {
+async function initHID(keypadConfig) {
     let timer = null;
     let device = new KeyPad(keypadConfig.vendorId, keypadConfig.productId, keypadConfig.keymap);
 
@@ -93,7 +128,7 @@ async function initHID() {
     device.connect();
 }
 
-async function initAtem() {
+async function initAtem(switcherIP) {
     const atem = new Atem();
 
     const errorHandlerAtem = error => {
@@ -114,11 +149,11 @@ async function initAtem() {
     atem.connect(switcherIP);
 }
 
-function initVisca() {
+function initVisca(cameraConfig) {
     // Initialize Visca controllers
     let cameras = [];
 
-    for(let i = 0; i < cameraConfig.length; i++) {
+    for (let i = 0; i < cameraConfig.length; i++) {
         const camera = new ViscaController(cameraConfig[i].ipAddress, cameraConfig[i].port);
 
         //Create listeners for each camera
