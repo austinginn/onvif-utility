@@ -1,3 +1,7 @@
+import { vbConfig } from './config/vbConfig.mjs';
+import ViscaController from './visca.mjs';
+import { Atem } from 'atem-connection';
+
 export default class vbProfile {
     constructor() {
         this.selectedCamera = 1; //current selected camera
@@ -7,48 +11,104 @@ export default class vbProfile {
         this.selectedQueuePreset = 1; //preset to run in queue
         this.modifier = false; //modifier key status
         this.saveModifier = false; //save modifier key status
+        this.cameraConfig = vbConfig.cameras;
+        this.switcherConfig = vbConfig.switchers;
     }
 
-    handleKeypress(atem, cameras, key) {
+    async connectToDevices() {
+        this.cameras = this.#initVisca(this.cameraConfig);
+        this.atem = await this.#initAtem(this.switcherConfig);
+        return;
+    }
+
+    #initVisca(conf) {
+        let cameras = [];
+        for (let i = 0; i < conf.length; i++) {
+            const camera = new ViscaController(conf[i].ipAddress, conf[i].port);
+
+            // //Create listeners for each camera
+            // camera.on('response', (msg, rinfo) => {
+            //     console.log(`Received response from ${rinfo.address}:${rinfo.port}: ${msg}`);
+            // });
+
+            camera.on('error', (err) => {
+                console.error('An error occurred:', err);
+            });
+
+            cameras.push(camera);
+        }
+
+        return cameras;
+    }
+
+    #initAtem(conf) {
+        let switcherPromises = [];
+
+        for (let i = 0; i < conf.length; i++) {
+            const atem = new Atem();
+            const errorHandlerAtem = error => {
+                console.error('Error:', error);
+            }
+
+            const switcherPromise = new Promise((resolve, reject) => {
+                const connectedHandler = () => {
+                    console.log('Connected to ATEM Switcher');
+                    atem.removeListener('error', errorHandlerAtem);
+                    atem.removeListener('connected', connectedHandler);
+                    resolve(atem);
+                }
+
+                atem.on('error', errorHandlerAtem);
+                atem.on('connected', connectedHandler);
+                atem.connect(switcherIP);
+            });
+
+            switcherPromises.push(switcherPromise);
+        }
+
+        return Promise.all(switcherPromises);
+    }
+
+    handleKeypress(key) {
         switch (key) {
             case 'home': // send cameras to home position
                 if (modifier) {
-                    for (let i = 0; i < cameras.length; i++) {
+                    for (let i = 0; i < this.cameras.length; i++) {
                         console.log(`Cam ${i + 1}: go home.`);
-                        cameras[i].sendViscaCommand('81010604FF');
+                        this.cameras[i].sendViscaCommand('81010604FF');
                     }
                 } else {
                     console.log(`Cam ${selectedCamera}: go home.`);
-                    cameras[selectedCamera - 1].sendViscaCommand('81010604FF');
+                    this.cameras[selectedCamera - 1].sendViscaCommand('81010604FF');
                 }
                 break;
             case 'upArrow': // tilt camera up
                 console.log(`Cam ${selectedCamera}: tilt up.`);
-                cameraConfig[selectedCamera - 1].sendViscaCommand('8101060101010301FF');
+                this.cameras[selectedCamera - 1].sendViscaCommand('8101060101010301FF');
                 break;
             case 'downArrow': // tilt camera down
                 console.log(`Cam ${selectedCamera}: tilt down.`);
-                cameras[selectedCamera - 1].sendViscaCommand('8101060101010302FF');
+                this.cameras[selectedCamera - 1].sendViscaCommand('8101060101010302FF');
                 break;
             case 'leftArrow': // pan camera left
                 console.log(`Cam ${selectedCamera}: pan left.`);
-                cameras[selectedCamera - 1].sendViscaCommand('8101060101010103FF');
+                this.cameras[selectedCamera - 1].sendViscaCommand('8101060101010103FF');
                 break;
             case 'rightArrow': // pan camera right
                 console.log(`Cam ${selectedCamera}: pan right.`);
-                cameras[selectedCamera - 1].sendViscaCommand('8101060101010203FF');
+                this.cameras[selectedCamera - 1].sendViscaCommand('8101060101010203FF');
                 break;
             case 'end': // stop camera movement
                 if (modifier) {
-                    for (let i = 0; i < cameras.length; i++) {
+                    for (let i = 0; i < this.cameras.length; i++) {
                         console.log(`Cam ${i + 1}: stopping.`);
-                        cameras[i].sendViscaCommand('8101060101010303FF'); //stop pt
-                        cameras[i].sendViscaCommand('8101040700FF'); //stop zoom
+                        this.cameras[i].sendViscaCommand('8101060101010303FF'); //stop pt
+                        this.cameras[i].sendViscaCommand('8101040700FF'); //stop zoom
                     }
                 } else {
                     console.log(`Cam ${selectedCamera}: stopping.`);
-                    cameras[selectedCamera - 1].sendViscaCommand('8101060101010303FF'); //stop pt
-                    cameras[selectedCamera - 1].sendViscaCommand('8101040700FF'); //stop zoom
+                    this.cameras[selectedCamera - 1].sendViscaCommand('8101060101010303FF'); //stop pt
+                    this.cameras[selectedCamera - 1].sendViscaCommand('8101040700FF'); //stop zoom
                 }
                 break;
             case 'period': //toggle queue mode
@@ -57,7 +117,7 @@ export default class vbProfile {
                 break;
             case 'enter': //run queue
                 console.log(`Cam ${selectedQueueCamera}: running queue.`);
-                cameras[selectedQueueCamera - 1].recallPreset(selectedQueuePreset);
+                this.cameras[selectedQueueCamera - 1].recallPreset(selectedQueuePreset);
                 break;
             case 'numLock': //select cam 1
                 selected = 1;
@@ -78,12 +138,12 @@ export default class vbProfile {
                 if (saveModifier) {
                     //save preset
                     console.log(`Cam ${selectedCamera}: saving to preset 1.`);
-                    cameras[selectedCamera - 1].sendViscaCommand('8101043F0101FF');
+                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0101FF');
                     break;
                 }
                 if (!queue) {
                     console.log(`Cam ${selectedCamera}: recalling preset 1.`);
-                    cameras[selectedCameras - 1].recallPreset(1);
+                    this.cameras[selectedCamera - 1].recallPreset(1);
                 } else {
                     console.log(`Cam ${selectedCamera}: preset 1 queued.`);
                     selectedQueuePreset = 1;
@@ -94,12 +154,12 @@ export default class vbProfile {
                 if (saveModifier) {
                     //save preset
                     console.log(`Cam ${selectedCamera}: saving to preset 2.`);
-                    cameras[selectedCamera - 1].sendViscaCommand('8101043F0102FF');
+                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0102FF');
                     break;
                 }
                 if (!queue) {
                     console.log(`Cam ${selectedCamera}: recalling preset 2.`);
-                    cameras[selectedCamera - 1].recallPreset(2);
+                    this.cameras[selectedCamera - 1].recallPreset(2);
                 } else {
                     console.log(`Cam ${selectedCamera}: preset 2 queued.`);
                     selectedQueuePreset = 2;
@@ -110,12 +170,12 @@ export default class vbProfile {
                 if (saveModifier) {
                     //save preset
                     console.log(`Cam ${selectedCamera}: saving to preset 3.`);
-                    cameras[selectedCamera - 1].sendViscaCommand('8101043F0103FF');
+                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0103FF');
                     break;
                 }
                 if (!queue) {
                     console.log(`Cam ${selectedCamera}: recalling preset 3.`);
-                    cameras[selectedCamera - 1].recallPreset(3);
+                    this.cameras[selectedCamera - 1].recallPreset(3);
                 } else {
                     console.log(`Cam ${selectedCamera}: preset 3 queued.`);
                     selectedQueuePreset = 3;
@@ -126,12 +186,12 @@ export default class vbProfile {
                 if (saveModifier) {
                     //save preset
                     console.log(`Cam ${selectedCamera}: saving to preset 4.`);
-                    cameras[selectedCamera - 1].sendViscaCommand('8101043F0104FF');
+                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0104FF');
                     break;
                 }
                 if (!queue) {
                     console.log(`Cam ${selectedCamera}: recalling preset 4.`);
-                    cameras[selectedCamera - 1].recallPreset(4);
+                    this.cameras[selectedCamera - 1].recallPreset(4);
                 } else {
                     console.log(`Cam ${selectedCamera}: preset 4 queued.`);
                     selectedQueuePreset = 4;
@@ -142,12 +202,12 @@ export default class vbProfile {
                 if (saveModifier) {
                     //save preset
                     console.log(`Cam ${selectedCamera}: saving to preset 5.`);
-                    cameras[selectedCamera - 1].sendViscaCommand('8101043F0105FF');
+                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0105FF');
                     break;
                 }
                 if (!queue) {
                     console.log(`Cam ${selectedCamera}: recalling preset 5.`);
-                    cameras[selectedCamera - 1].recallPreset(5);
+                    this.cameras[selectedCamera - 1].recallPreset(5);
                 } else {
                     console.log(`Cam ${selectedCamera}: preset 5 queued.`);
                     selectedQueuePreset = 5;
@@ -158,12 +218,12 @@ export default class vbProfile {
                 if (saveModifier) {
                     //save preset
                     console.log(`Cam ${selectedCamera}: saving to preset 6.`);
-                    cameras[selectedCamera - 1].sendViscaCommand('8101043F0106FF');
+                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0106FF');
                     break;
                 }
                 if (!queue) {
                     console.log(`Cam ${selectedCamera}: recalling preset 6.`);
-                    cameras[selectedCamera - 1].recallPreset(6);
+                    this.cameras[selectedCamera - 1].recallPreset(6);
                 } else {
                     console.log(`Cam ${selectedCamera}: preset 6 queued.`);
                     selectedQueuePreset = 6;
@@ -174,12 +234,12 @@ export default class vbProfile {
                 if (saveModifier) {
                     //save preset
                     console.log(`Cam ${selectedCamera}: saving to preset 7.`);
-                    cameras[selectedCamera - 1].sendViscaCommand('8101043F0107FF');
+                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0107FF');
                     break;
                 }
                 if (!queue) {
                     console.log(`Cam ${selectedCamera}: recalling preset 7.`);
-                    cameras[selectedCamera - 1].recallPreset(7);
+                    this.cameras[selectedCamera - 1].recallPreset(7);
                 } else {
                     console.log(`Cam ${selectedCamera}: preset 7 queued.`);
                     selectedQueuePreset = 7;
@@ -190,12 +250,12 @@ export default class vbProfile {
                 if (saveModifier) {
                     //save preset
                     console.log(`Cam ${selectedCamera}: saving to preset 8.`);
-                    cameras[selectedCamera - 1].sendViscaCommand('8101043F0108FF');
+                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0108FF');
                     break;
                 }
                 if (!queue) {
                     console.log(`Cam ${selectedCamera}: recalling preset 8.`);
-                    cameras[selectedCamera - 1].recallPreset(8);
+                    this.cameras[selectedCamera - 1].recallPreset(8);
                 } else {
                     console.log(`Cam ${selectedCamera}: preset 8 queued.`);
                     selectedQueuePreset = 8;
@@ -206,12 +266,12 @@ export default class vbProfile {
                 if (saveModifier) {
                     //save preset
                     console.log(`Cam ${selectedCamera}: saving to preset 9.`);
-                    cameras[selectedCamera - 1].sendViscaCommand('8101043F0109FF');
+                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0109FF');
                     break;
                 }
                 if (!queue) {
                     console.log(`Cam ${selectedCamera}: recalling preset 9.`);
-                    cameras[selectedCamera - 1].recallPreset(9);
+                    this.cameras[selectedCamera - 1].recallPreset(9);
                 } else {
                     console.log(`Cam ${selectedCamera}: preset 9 queued.`);
                     selectedQueuePreset = 9;
@@ -224,11 +284,11 @@ export default class vbProfile {
                 break;
             case 'pgUp': //zoom in
                 console.log(`Cam ${selectedCamera}: zoom in.`);
-                cameras[selectedCamera - 1].sendViscaCommand('8101040720FF');
+                this.cameras[selectedCamera - 1].sendViscaCommand('8101040720FF');
                 break;
             case 'pgDn': //zoom out
                 console.log(`Cam ${selectedCamera}: zoom out.`);
-                cameras[selectedCamera - 1].sendViscaCommand('8101040730FF');
+                this.cameras[selectedCamera - 1].sendViscaCommand('8101040730FF');
                 break;
             case 'zero':
                 //save modifier
