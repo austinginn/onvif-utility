@@ -38,7 +38,7 @@ class PanasonicController extends EventEmitter {
 
     async panLeft(speed) {
         //convert speed
-        let pSpeed = math.max(1, Math.min(100, speed));
+        let pSpeed = Math.max(1, Math.min(100, speed));
         pSpeed = Math.ceil((100 - pSpeed) / (100 / 48)) + 1;
         pSpeed = speed.toString().padStart(2, '0');
 
