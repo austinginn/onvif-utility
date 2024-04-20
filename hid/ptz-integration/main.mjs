@@ -8,11 +8,12 @@ main({
     keypadConfig,
 });
 
-async function main({latencyCalcInterval, Profile, keypadConfig}) {
+async function main({ latencyCalcInterval, Profile, keypadConfig }) {
     //init HID
     console.log('Initializing HID...');
 
     const HID = await initHID(keypadConfig);
+    console.log(HID);
 
     //init profile
     let profile = new Profile();
@@ -63,41 +64,42 @@ async function main({latencyCalcInterval, Profile, keypadConfig}) {
 
 
 async function initHID(keypadConfig) {
-    let timer = null;
-    let device = new KeyPad(keypadConfig.vendorId, keypadConfig.productId, keypadConfig.keymap);
+    return new Promise((resolve, reject) => {
+        let timer = null;
+        let device = new KeyPad(keypadConfig.vendorId, keypadConfig.productId, keypadConfig.keymap);
 
 
-    const errorHandler = error => {
-        console.error('Error:', error);
-    }
+        const errorHandler = error => {
+            console.error('Error:', error);
+        }
 
-    const foundHandler = message => {
-        console.log('Checking application control. Press a key on the keypad...');
-        timer = setTimeout(() => {
-            console.log('Application does not have control of the device. Retrying...');
-            device.close();
-            device.removeAllListeners();
-            device = null;
-            initHID();
-        }, 5000);
-    }
+        const foundHandler = message => {
+            console.log('Checking application control. Press a key on the keypad...');
+            timer = setTimeout(() => {
+                console.log('Application does not have control of the device. Retrying...');
+                device.close();
+                device.removeAllListeners();
+                device = null;
+                initHID();
+            }, 5000);
+        }
 
-    const keyReleaseHandler = key => {
-        clearTimeout(timer);
-        console.log('Application control confirmed!');
-        console.log('Releasing listeners...');
-        device.removeListener('error', errorHandler);
-        device.removeListener('found', foundHandler);
-        device.removeListener('keyrelease', keyReleaseHandler);
+        const keyReleaseHandler = key => {
+            clearTimeout(timer);
+            console.log('Application control confirmed!');
+            console.log('Releasing listeners...');
+            device.removeListener('error', errorHandler);
+            device.removeListener('found', foundHandler);
+            device.removeListener('keyrelease', keyReleaseHandler);
 
-        //resolve the promise
-        return new Promise((resolve, reject) => {
+            //resolve the promise
             resolve(device);
-        });
-    }
 
-    device.on('yo', errorHandler);
-    device.on('found', foundHandler);
-    device.on('keyrelease', keyReleaseHandler);
-    device.connect();
+        }
+
+        device.on('yo', errorHandler);
+        device.on('found', foundHandler);
+        device.on('keyrelease', keyReleaseHandler);
+        device.connect();
+    });
 }

@@ -127,187 +127,187 @@ export default class vbProfile {
                 this.cameras[selectedQueueCamera - 1].recallPreset(selectedQueuePreset);
                 break;
             case 'numLock': //select cam 1
-                selected = 1;
-                atem.setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 18 }, 0);
+                this.selectedCamera = 1;
+                this.atem.setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 18 }, 0);
                 console.log(`Cam ${selectedCamera}: selected.`);
                 break;
             case 'divide': //select cam 2
-                selected = 2;
-                atem.setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 19 }, 0);
+                this.selectedCamera = 2;
+                this.atem.setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 19 }, 0);
                 console.log(`Cam ${selectedCamera}: selected.`);
                 break;
             case 'multiply': //select cam 3
-                selected = 3;
-                atem.setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 20 }, 0);
-                console.log(`Cam ${selectedCamera}: selected.`);
+                this.selectedCamera = 3;
+                this.atem.setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 20 }, 0);
+                console.log(`Cam ${this.selectedCamera}: selected.`);
                 break;
             case 'one': //preset one
-                if (saveModifier) {
+                if (this.saveModifier) {
                     //save preset
-                    console.log(`Cam ${selectedCamera}: saving to preset 1.`);
-                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0101FF');
+                    console.log(`Cam ${this.selectedCamera}: saving to preset 1.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0101FF');
                     break;
                 }
                 if (!queue) {
                     if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
-                        console.log(`Cam ${selectedCamera}: recalling preset 1.`);
-                        this.cameras[selectedCamera - 1].recallPreset(1);
+                        console.log(`Cam ${this.selectedCamera}: recalling preset 1.`);
+                        this.cameras[this.selectedCamera - 1].recallPreset(1);
                     }
 
                 } else {
-                    console.log(`Cam ${selectedCamera}: preset 1 queued.`);
+                    console.log(`Cam ${this.selectedCamera}: preset 1 queued.`);
                     selectedQueuePreset = 1;
-                    selectedQueueCamera = selectedCamera;
+                    selectedQueueCamera = this.selectedCamera;
                 }
                 break;
             case 'two': //preset two
                 if (saveModifier) {
                     //save preset
-                    console.log(`Cam ${selectedCamera}: saving to preset 2.`);
-                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0102FF');
+                    console.log(`Cam ${this.selectedCamera}: saving to preset 2.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0102FF');
                     break;
                 }
                 if (!queue) {
                     if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
-                        console.log(`Cam ${selectedCamera}: recalling preset 2.`);
-                        this.cameras[selectedCamera - 1].recallPreset(2);
+                        console.log(`Cam ${this.selectedCamera}: recalling preset 2.`);
+                        this.cameras[this.selectedCamera - 1].recallPreset(2);
                     }
 
                 } else {
-                    console.log(`Cam ${selectedCamera}: preset 2 queued.`);
+                    console.log(`Cam ${this.selectedCamera}: preset 2 queued.`);
                     selectedQueuePreset = 2;
-                    selectedQueueCamera = selectedCamera;
+                    selectedQueueCamera = this.selectedCamera;
                 }
                 break;
             case 'three': //preset three
-                if (saveModifier) {
+                if (this.saveModifier) {
                     //save preset
-                    console.log(`Cam ${selectedCamera}: saving to preset 3.`);
-                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0103FF');
+                    console.log(`Cam ${this.selectedCamera}: saving to preset 3.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0103FF');
                     break;
                 }
                 if (!queue) {
                     if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
-                        console.log(`Cam ${selectedCamera}: recalling preset 3.`);
-                        this.cameras[selectedCamera - 1].recallPreset(3);
+                        console.log(`Cam ${this.selectedCamera}: recalling preset 3.`);
+                        this.cameras[this.selectedCamera - 1].recallPreset(3);
                     }
 
                 } else {
-                    console.log(`Cam ${selectedCamera}: preset 3 queued.`);
+                    console.log(`Cam ${this.selectedCamera}: preset 3 queued.`);
                     selectedQueuePreset = 3;
-                    selectedQueueCamera = selectedCamera;
+                    selectedQueueCamera = this.selectedCamera;
                 }
                 break;
             case 'four': //preset four
-                if (saveModifier) {
+                if (this.saveModifier) {
                     //save preset
-                    console.log(`Cam ${selectedCamera}: saving to preset 4.`);
-                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0104FF');
+                    console.log(`Cam ${this.selectedCamera}: saving to preset 4.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0104FF');
                     break;
                 }
                 if (!queue) {
                     if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
-                        console.log(`Cam ${selectedCamera}: recalling preset 4.`);
-                        this.cameras[selectedCamera - 1].recallPreset(4);
+                        console.log(`Cam ${this.selectedCamera}: recalling preset 4.`);
+                        this.cameras[this.selectedCamera - 1].recallPreset(4);
                     }
                 } else {
-                    console.log(`Cam ${selectedCamera}: preset 4 queued.`);
+                    console.log(`Cam ${this.selectedCamera}: preset 4 queued.`);
                     selectedQueuePreset = 4;
-                    selectedQueueCamera = selectedCamera;
+                    selectedQueueCamera = this.selectedCamera;
                 }
                 break;
             case 'five': //preset five
-                if (saveModifier) {
+                if (this.saveModifier) {
                     //save preset
-                    console.log(`Cam ${selectedCamera}: saving to preset 5.`);
-                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0105FF');
+                    console.log(`Cam ${this.selectedCamera}: saving to preset 5.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0105FF');
                     break;
                 }
                 if (!queue) {
                     if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
-                        console.log(`Cam ${selectedCamera}: recalling preset 5.`);
-                        this.cameras[selectedCamera - 1].recallPreset(5);
+                        console.log(`Cam ${this.selectedCamera}: recalling preset 5.`);
+                        this.cameras[this.selectedCamera - 1].recallPreset(5);
                     }
 
                 } else {
-                    console.log(`Cam ${selectedCamera}: preset 5 queued.`);
+                    console.log(`Cam ${this.selectedCamera}: preset 5 queued.`);
                     selectedQueuePreset = 5;
-                    selectedQueueCamera = selectedCamera;
+                    selectedQueueCamera = this.selectedCamera;
                 }
                 break;
             case 'six': //preset six
-                if (saveModifier) {
+                if (this.saveModifier) {
                     //save preset
-                    console.log(`Cam ${selectedCamera}: saving to preset 6.`);
-                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0106FF');
+                    console.log(`Cam ${this.selectedCamera}: saving to preset 6.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0106FF');
                     break;
                 }
                 if (!queue) {
                     if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
-                        console.log(`Cam ${selectedCamera}: recalling preset 6.`);
-                        this.cameras[selectedCamera - 1].recallPreset(6);
+                        console.log(`Cam ${this.selectedCamera}: recalling preset 6.`);
+                        this.cameras[this.selectedCamera - 1].recallPreset(6);
                     }
 
                 } else {
-                    console.log(`Cam ${selectedCamera}: preset 6 queued.`);
+                    console.log(`Cam ${this.selectedCamera}: preset 6 queued.`);
                     selectedQueuePreset = 6;
-                    selectedQueueCamera = selectedCamera;
+                    selectedQueueCamera = this.selectedCamera;
                 }
                 break;
             case 'seven': //preset seven
-                if (saveModifier) {
+                if (this.saveModifier) {
                     //save preset
-                    console.log(`Cam ${selectedCamera}: saving to preset 7.`);
-                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0107FF');
+                    console.log(`Cam ${this.selectedCamera}: saving to preset 7.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0107FF');
                     break;
                 }
                 if (!queue) {
                     if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
-                        console.log(`Cam ${selectedCamera}: recalling preset 7.`);
-                        this.cameras[selectedCamera - 1].recallPreset(7);
+                        console.log(`Cam ${this.selectedCamera}: recalling preset 7.`);
+                        this.cameras[this.selectedCamera - 1].recallPreset(7);
                     }
 
                 } else {
-                    console.log(`Cam ${selectedCamera}: preset 7 queued.`);
+                    console.log(`Cam ${this.selectedCamera}: preset 7 queued.`);
                     selectedQueuePreset = 7;
-                    selectedQueueCamera = selectedCamera;
+                    selectedQueueCamera = this.selectedCamera;
                 }
                 break;
             case 'eight': //preset eight
-                if (saveModifier) {
+                if (this.saveModifier) {
                     //save preset
-                    console.log(`Cam ${selectedCamera}: saving to preset 8.`);
-                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0108FF');
+                    console.log(`Cam ${this.selectedCamera}: saving to preset 8.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0108FF');
                     break;
                 }
                 if (!queue) {
                     if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
-                        console.log(`Cam ${selectedCamera}: recalling preset 8.`);
-                        this.cameras[selectedCamera - 1].recallPreset(8);
+                        console.log(`Cam ${this.selectedCamera}: recalling preset 8.`);
+                        this.cameras[this.selectedCamera - 1].recallPreset(8);
                     }
                 } else {
-                    console.log(`Cam ${selectedCamera}: preset 8 queued.`);
+                    console.log(`Cam ${this.selectedCamera}: preset 8 queued.`);
                     selectedQueuePreset = 8;
-                    selectedQueueCamera = selectedCamera;
+                    selectedQueueCamera = this.selectedCamera;
                 }
                 break;
             case 'nine': //preset nine
-                if (saveModifier) {
+                if (this.saveModifier) {
                     //save preset
-                    console.log(`Cam ${selectedCamera}: saving to preset 9.`);
-                    this.cameras[selectedCamera - 1].sendViscaCommand('8101043F0109FF');
+                    console.log(`Cam ${this.selectedCamera}: saving to preset 9.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0109FF');
                     break;
                 }
                 if (!queue) {
                     if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
-                        console.log(`Cam ${selectedCamera}: recalling preset 9.`);
-                        this.cameras[selectedCamera - 1].recallPreset(9);
+                        console.log(`Cam ${this.selectedCamera}: recalling preset 9.`);
+                        this.cameras[this.selectedCamera - 1].recallPreset(9);
                     }
 
                 } else {
-                    console.log(`Cam ${selectedCamera}: preset 9 queued.`);
+                    console.log(`Cam ${this.selectedCamera}: preset 9 queued.`);
                     selectedQueuePreset = 9;
-                    selectedQueueCamera = selectedCamera;
+                    selectedQueueCamera = this.selectedCamera;
                 }
                 break;
             case 'tab': //modifier key
@@ -315,16 +315,16 @@ export default class vbProfile {
                 modifier = true;
                 break;
             case 'pgUp': //zoom in
-                console.log(`Cam ${selectedCamera}: zoom in.`);
-                this.cameras[selectedCamera - 1].sendViscaCommand('8101040720FF');
+                console.log(`Cam ${this.selectedCamera}: zoom in.`);
+                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101040720FF');
                 break;
             case 'pgDn': //zoom out
-                console.log(`Cam ${selectedCamera}: zoom out.`);
-                this.cameras[selectedCamera - 1].sendViscaCommand('8101040730FF');
+                console.log(`Cam ${this.selectedCamera}: zoom out.`);
+                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101040730FF');
                 break;
             case 'zero':
                 //save modifier
-                save = true;
+                this.saveModifier = true;
                 console.log('Save modifier pressed.');
                 break;
             default:
@@ -340,7 +340,7 @@ export default class vbProfile {
                 break;
             case 'zero':
                 //save modifier
-                saveModifier = false;
+                this.saveModifier = false;
                 console.log('Save modifier released.');
                 break;
             default:
