@@ -1,4 +1,4 @@
-import KeyPad from './main_hid.mjs';
+import KeyPad from '../main_hid.mjs';
 import { keypadConfig } from './config/keypadConfig.mjs';
 import vbProfile from './profiles/vbProfile.mjs';
 

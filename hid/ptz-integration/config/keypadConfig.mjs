@@ -1,4 +1,4 @@
-export const keypadProfile = {
+export const keypadConfig = {
     vendorId: 9614,
     productId: 15,
     keymap: {
