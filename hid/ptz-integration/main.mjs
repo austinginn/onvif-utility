@@ -27,7 +27,10 @@ async function main({ latencyCalcInterval, Profile, keypadConfig }) {
 
     setInterval(() => {
         // Calculate the average latency
-        const averageLatency = latencies.reduce((a, b) => a + b, 0) / latencies.length;
+        let averageLatency = 0;
+        if (latencies.length > 0) {
+            averageLatency = latencies.reduce((a, b) => a + b, 0) / latencies.length;
+        }
         console.log(`Average Profile Execution Latency: ${averageLatency}ms `);
         // Clear the latencies array
         latencies = [];
@@ -80,7 +83,7 @@ async function initHID(keypadConfig) {
                 device.close();
                 device.removeAllListeners();
                 device = null;
-                initHID();
+                resolve(initHID(keypadConfig));
             }, 5000);
         }
 
