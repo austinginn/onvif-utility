@@ -1,5 +1,5 @@
 import KeyPad from './main_hid.mjs';
-import ViscaController from './visca.mjs';
+import ViscaController from './protocols/visca.mjs';
 import { Atem } from 'atem-connection';
 
 let confirmed = false;

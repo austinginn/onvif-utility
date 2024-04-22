@@ -121,8 +121,8 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101040700FF'); //stop zoom
                 }
                 break;
-            case 'period': //toggle queue mode
-                this.queue = !this.queue;
+            case 'period': //turn on
+                this.queue = true;
                 console.log(`Queue mode: ${this.queue}`);
                 break;
             case 'enter': //run queue
@@ -346,6 +346,10 @@ export default class vbProfile {
                 //save modifier
                 this.saveModifier = false;
                 console.log('Save modifier released.');
+                break;
+            case 'period':
+                this.queue = false;
+                console.log("Queue mode off.");
                 break;
             default:
                 break;

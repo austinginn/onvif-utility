@@ -1,4 +1,13 @@
-import PanasonicController from './panasonic.mjs'
+import { Atem } from 'atem-connection';
 
-const camera = new PanasonicController('192.168.42.3');
-camera.recallPresest('01');
+const stateChangedHandler = (state) => {
+    console.log('Switcher state changed:');
+    console.log(atem.state.video.mixEffects[0].programInput);
+}
+
+
+const atem = new Atem();
+atem.connect("192.168.40.2");
+// atem.on('connected', connectedHandler);
+atem.on('stateChanged', stateChangedHandler);
+

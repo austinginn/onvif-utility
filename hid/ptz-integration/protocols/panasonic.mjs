@@ -19,7 +19,9 @@ class PanasonicController extends EventEmitter {
 
     // Function to recall a specific preset
     async recallPresest(presetNumber) {
-        const res = await fetch(`${this.url}%23R${presetNumber}&res=1`);
+        // Ensure presetNumber is always two digits
+        const paddedPresetNumber = String(presetNumber).padStart(2, '0');
+        const res = await fetch(`${this.url}%23R${paddedPresetNumber}&res=1`);
         if(!res.ok){
             console.error(`HTTP error! status: ${res.status}`);
             return false;
@@ -27,8 +29,10 @@ class PanasonicController extends EventEmitter {
         return true;
     }
 
-    async setPreset(presetNumber) {
-        const res = await fetch(`${this.url}%23M${presetNumber}&res=1`)
+    async savePreset(presetNumber) {
+        // Ensure presetNumber is always two digits
+        const paddedPresetNumber = String(presetNumber).padStart(2, '0');
+        const res = await fetch(`${this.url}%23M${paddedPresetNumber}&res=1`)
         if(!res.ok){
             console.error(`HTTP error! status: ${res.status}`);
             return false;

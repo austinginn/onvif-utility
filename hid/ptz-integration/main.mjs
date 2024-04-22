@@ -1,10 +1,11 @@
 import KeyPad from '../main_hid.mjs';
 import { keypadConfig } from './config/keypadConfig.mjs';
-import vbProfile from './profiles/vbProfile.mjs';
+
+const profileName = process.argv[2];
 
 main({
     latencyCalcInterval: 30000,
-    Profile: vbProfile,
+    Profile: profileName,
     keypadConfig,
 });
 
@@ -16,7 +17,8 @@ async function main({ latencyCalcInterval, Profile, keypadConfig }) {
     console.log(HID);
 
     //init profile
-    let profile = new Profile();
+    const ProfileModule = await import(`./profiles/${Profile}.mjs`); // dynamic import
+    let profile = new ProfileModule.default();
     await profile.connectToDevices();
 
     ///////////////
@@ -24,6 +26,7 @@ async function main({ latencyCalcInterval, Profile, keypadConfig }) {
     ///////////////
     let latency;
     let latencies = [];
+    const maxLatencies = 5;
 
     setInterval(() => {
         // Calculate the average latency
@@ -51,6 +54,9 @@ async function main({ latencyCalcInterval, Profile, keypadConfig }) {
         const end = Date.now();
 
         latency = end - start;
+        if(latencies.length >= maxLatencies){
+            latencies.shift();
+        }
         latencies.push(latency);
     }
 
