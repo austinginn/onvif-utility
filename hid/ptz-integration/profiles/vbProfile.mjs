@@ -25,9 +25,10 @@ export default class vbProfile {
     #initVisca(conf) {
         let cameras = [];
         for (let i = 0; i < conf.length; i++) {
-            const camera = new ViscaController(conf[i].ipAddress, conf[i].port);
+            // console.log(conf[i]);
+            const camera = new ViscaController(conf[i].ip, conf[i].port);
 
-            // //Create listeners for each camera
+            //Create listeners for each camera
             // camera.on('response', (msg, rinfo) => {
             //     console.log(`Received response from ${rinfo.address}:${rinfo.port}: ${msg}`);
             // });
@@ -35,6 +36,8 @@ export default class vbProfile {
             camera.on('error', (err) => {
                 console.error('An error occurred:', err);
             });
+
+
 
             cameras.push(camera);
         }
@@ -149,7 +152,7 @@ export default class vbProfile {
                     break;
                 }
                 if (!this.queue) {
-                    if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
+                    if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 1.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(1);
                     }
@@ -168,7 +171,8 @@ export default class vbProfile {
                     break;
                 }
                 if (!this.queue) {
-                    if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
+                    console.log(this.selectedCamera, this.atem[0].state.video.mixEffects[0].programInput)
+                    if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 2.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(2);
                     }
@@ -187,7 +191,7 @@ export default class vbProfile {
                     break;
                 }
                 if (!this.queue) {
-                    if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
+                    if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 3.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(3);
                     }
@@ -206,7 +210,7 @@ export default class vbProfile {
                     break;
                 }
                 if (!this.queue) {
-                    if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
+                    if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 4.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(4);
                     }
@@ -224,7 +228,7 @@ export default class vbProfile {
                     break;
                 }
                 if (!this.queue) {
-                    if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
+                    if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 5.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(5);
                     }
@@ -243,7 +247,7 @@ export default class vbProfile {
                     break;
                 }
                 if (!this.queue) {
-                    if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
+                    if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 6.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(6);
                     }
@@ -262,7 +266,7 @@ export default class vbProfile {
                     break;
                 }
                 if (!this.queue) {
-                    if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
+                    if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 7.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(7);
                     }
@@ -281,7 +285,7 @@ export default class vbProfile {
                     break;
                 }
                 if (!this.queue) {
-                    if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
+                    if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 8.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(8);
                     }
@@ -299,7 +303,7 @@ export default class vbProfile {
                     break;
                 }
                 if (!this.queue) {
-                    if (this.selectedCamera - 1 != this.atem[0].state.video.mixEffects[0].programInput) {
+                    if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 9.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(9);
                     }
@@ -332,7 +336,7 @@ export default class vbProfile {
         }
     }
 
-    handleKeyrelease(atem, cameras, key) {
+    handleKeyrelease(key) {
         switch (key) {
             case 'tab': //modifier key
                 console.log('Modifier key released.')
