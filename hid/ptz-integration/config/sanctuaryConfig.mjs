@@ -2,12 +2,12 @@ export const sanctuaryConfig = {
     cameras: [
         {
             name: "Left Cam",
-            ip: "192.168.42.2",
+            ip: "192.168.42.3",
             protocol: "panasonic"
         },
         {
             name: "Right Cam",
-            ip: "192.168.42.3",
+            ip: "192.168.42.2",
             protocol: "panasonic"
         }
     ],

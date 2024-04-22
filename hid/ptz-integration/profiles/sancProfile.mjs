@@ -75,6 +75,9 @@ export default class sancProfile {
     }
 
     #handlePreset(presetNumber) {
+        console.log("presetNumber", presetNumber);
+        console.log("selectedCamera - 1", this.selectedCamera - 1);
+        console.log(this.cameras[this.selectedCamera - 1]);
         if (this.saveModifier) {
             console.log(`Cam ${this.selectedCamera}: saving to preset ${presetNumber}.`);
             this.cameras[this.selectedCamera - 1].savePreset(presetNumber);
@@ -121,7 +124,7 @@ export default class sancProfile {
                 break;
             case 'rightArrow': // pan camera right
                 console.log(`Cam ${this.selectedCamera}: pan right.`);
-                this.cameras[this.selectedCamera - 1].panLeft(this.PAN_SPEED);
+                this.cameras[this.selectedCamera - 1].panRight(this.PAN_SPEED);
                 break;
             case 'end': // stop camera movement
                 if (this.modifier) {

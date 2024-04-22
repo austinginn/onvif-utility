@@ -18,9 +18,11 @@ class PanasonicController extends EventEmitter {
     }
 
     // Function to recall a specific preset
-    async recallPresest(presetNumber) {
+    async recallPreset(presetNumber) {
         // Ensure presetNumber is always two digits
         const paddedPresetNumber = String(presetNumber).padStart(2, '0');
+        console.log(paddedPresetNumber);
+        console.log(`${this.url}%23R${paddedPresetNumber}&res=1`)
         const res = await fetch(`${this.url}%23R${paddedPresetNumber}&res=1`);
         if(!res.ok){
             console.error(`HTTP error! status: ${res.status}`);
@@ -44,7 +46,9 @@ class PanasonicController extends EventEmitter {
         //convert speed
         let pSpeed = Math.max(1, Math.min(100, speed));
         pSpeed = Math.ceil((100 - pSpeed) / (100 / 48)) + 1;
-        pSpeed = speed.toString().padStart(2, '0');
+        pSpeed = pSpeed.toString().padStart(2, '0');
+
+        console.log(pSpeed);
 
         const res = await fetch(`${this.url}%23P${pSpeed}&res=1`);
         if(!res.ok){
@@ -57,6 +61,9 @@ class PanasonicController extends EventEmitter {
     async panRight(speed) {
         let pSpeed = Math.max(1, Math.min(100, speed));
         pSpeed = Math.ceil(pSpeed * (99 - 51) / 100) + 51;
+        console.log("right", pSpeed);
+        pSpeed = pSpeed.toString().padStart(2, '0');
+        console.log(pSpeed);
 
         const res = await fetch(`${this.url}%23P${pSpeed}&res=1`);
         if(!res.ok){
@@ -68,9 +75,11 @@ class PanasonicController extends EventEmitter {
 
     async tiltDown(speed) {
         //convert speed
-        let pSpeed = math.max(1, Math.min(100, speed));
+        let pSpeed = Math.max(1, Math.min(100, speed));
         pSpeed = Math.ceil((100 - pSpeed) / (100 / 48)) + 1;
-        pSpeed = speed.toString().padStart(2, '0');
+        pSpeed = pSpeed.toString().padStart(2, '0');
+
+        console.log(pSpeed);
 
         const res = await fetch(`${this.url}%23T${pSpeed}&res=1`);
         if(!res.ok){
@@ -83,6 +92,9 @@ class PanasonicController extends EventEmitter {
     async tiltUp(speed) {
         let pSpeed = Math.max(1, Math.min(100, speed));
         pSpeed = Math.ceil(pSpeed * (99 - 51) / 100) + 51;
+        pSpeed = pSpeed.toString().padStart(2, '0');
+
+        console.log(pSpeed);
 
         const res = await fetch(`${this.url}%23T${pSpeed}&res=1`);
         if(!res.ok){
