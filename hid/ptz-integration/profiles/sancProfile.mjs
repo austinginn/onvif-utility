@@ -101,12 +101,14 @@ export default class sancProfile {
                         console.log(`Cam ${i + 1}: go home.`);
                         if (!this.#isLive(i + 1)) {
                             //send to home
+                            this.cameras[i].home();
                         }
                     }
                 } else {
                     console.log(`Cam ${this.selectedCamera}: go home.`);
                     if (!this.#isLive(selected)) {
                         //send home
+                        this.cameras[this.selectedCamera - 1].home();
                     }
                 }
                 break;
@@ -130,8 +132,9 @@ export default class sancProfile {
                 if (this.modifier) {
                     for (let i = 0; i < this.cameras.length; i++) {
                         console.log(`Cam ${i + 1}: stopping.`);
-                        this.cameras[i].stop(); //stop pt
+                        this.cameras[i].stopPT(); //stop pt
                         //stop zoom
+                        this.cameras[i].stopZ(); //stop zoom
                     }
                 } else {
                     console.log(`Cam ${this.selectedCamera}: stopping.`);
