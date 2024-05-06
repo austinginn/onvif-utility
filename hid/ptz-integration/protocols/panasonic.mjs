@@ -104,8 +104,55 @@ class PanasonicController extends EventEmitter {
         return true;
     }
 
-    async stop() {
+    async stopPT() {
         const res = await fetch(`${this.url}%23PTS5050&res=1`);
+        if(!res.ok){
+            console.error(`HTTP error! status: ${res.status}`);
+            return false;
+        }
+        return true;
+    }
+
+    async stopZ() {
+        const res = await fetch(`${this.url}%23ZS50&res=1`);
+        if(!res.ok){
+            console.error(`HTTP error! status: ${res.status}`);
+            return false;
+        }
+    }
+
+    async zoomIn(speed) {
+        let pSpeed = Math.max(1, Math.min(100, speed));
+        pSpeed = Math.ceil(pSpeed * (99 - 51) / 100) + 51;
+        pSpeed = pSpeed.toString().padStart(2, '0');
+
+        console.log(pSpeed);
+
+        const res = await fetch(`${this.url}%23Z${pSpeed}&res=1`);
+        if(!res.ok){
+            console.error(`HTTP error! status: ${res.status}`);
+            return false;
+        }
+        return true;
+    }
+
+    async zoomOut(speed){
+        let pSpeed = Math.max(1, Math.min(100, speed));
+        pSpeed = Math.ceil((100 - pSpeed) / (100 / 48)) + 1;
+        pSpeed = pSpeed.toString().padStart(2, '0');
+
+        console.log(pSpeed);
+
+        const res = await fetch(`${this.url}%23Z${pSpeed}&res=1`);
+        if(!res.ok){
+            console.error(`HTTP error! status: ${res.status}`);
+            return false;
+        }
+        return true;
+    }
+
+    async home(){
+        const res = await fetch(`${this.url}%23APC8008000&res=1`);
         if(!res.ok){
             console.error(`HTTP error! status: ${res.status}`);
             return false;

@@ -35,8 +35,6 @@ async function main({ latencyCalcInterval, Profile, keypadConfig }) {
             averageLatency = latencies.reduce((a, b) => a + b, 0) / latencies.length;
         }
         console.log(`Average Profile Execution Latency: ${averageLatency}ms `);
-        // Clear the latencies array
-        latencies = [];
     }, latencyCalcInterval);
 
 
