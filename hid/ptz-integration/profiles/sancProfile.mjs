@@ -195,10 +195,10 @@ export default class sancProfile {
                 break;
             case 'pgUp': //zoom in
                 console.log(`Cam ${this.selectedCamera}: zoom in.`);
-                this.cameras[this.selectedCamera - 1].zoomIn();
+                //this.cameras[this.selectedCamera - 1].zoomIn();
                 break;
             case 'pgDn': //zoom out
-                console.log(`Cam ${this.selectedCamera}: zoom out.`);
+                //console.log(`Cam ${this.selectedCamera}: zoom out.`);
                 this.cameras[this.selectedCamera - 1].zoomOut();
                 break;
             case 'zero':

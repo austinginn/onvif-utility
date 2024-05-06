@@ -18,6 +18,6 @@ export const sanctuaryConfig = {
             protocol: "atem"
         }
     ],
-    TILT_SPEED: 25,
-    PAN_SPEED: 25
+    TILT_SPEED: 15,
+    PAN_SPEED: 15
 }
