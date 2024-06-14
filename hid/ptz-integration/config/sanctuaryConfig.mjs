@@ -19,5 +19,6 @@ export const sanctuaryConfig = {
         }
     ],
     TILT_SPEED: 15,
-    PAN_SPEED: 15
+    PAN_SPEED: 15,
+    ZOOM_SPEED: 15
 }

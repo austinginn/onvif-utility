@@ -15,6 +15,8 @@ export default class sancProfile {
         this.switcherConfig = sanctuaryConfig.switchers;
         this.TILT_SPEED = sanctuaryConfig.TILT_SPEED;
         this.PAN_SPEED = sanctuaryConfig.PAN_SPEED;
+        this.ZOOM_SPEED = sanctuaryConfig.ZOOM_SPEED;
+        this.selectLink = false;
     }
 
     async connectToDevices() {
@@ -115,21 +117,33 @@ export default class sancProfile {
                     }
                 }
                 break;
+            case 'equals':
+                this.selectLink = !this.selectLink;
+                console.log(`Link: ${this.selectLink}`);
+                break;
             case 'upArrow': // tilt camera up
-                console.log(`Cam ${this.selectedCamera}: tilt up.`);
-                this.cameras[this.selectedCamera - 1].tiltUp(this.TILT_SPEED);
+                if (this.#isLive(this.selectedCamera)) {
+                    console.log(`Cam ${this.selectedCamera}: tilt up.`);
+                    this.cameras[this.selectedCamera - 1].tiltUp(this.TILT_SPEED);
+                }
                 break;
             case 'downArrow': // tilt camera down
-                console.log(`Cam ${this.selectedCamera}: tilt down.`);
-                this.cameras[this.selectedCamera - 1].tiltDown(this.TILT_SPEED);
+                if (this.#isLive(this.selectedCamera)) {
+                    console.log(`Cam ${this.selectedCamera}: tilt down.`);
+                    this.cameras[this.selectedCamera - 1].tiltDown(this.TILT_SPEED);
+                }
                 break;
             case 'leftArrow': // pan camera left
-                console.log(`Cam ${this.selectedCamera}: pan left.`);
-                this.cameras[this.selectedCamera - 1].panLeft(this.PAN_SPEED);
+                if (this.#isLive(this.selectedCamera)) {
+                    console.log(`Cam ${this.selectedCamera}: pan left.`);
+                    this.cameras[this.selectedCamera - 1].panLeft(this.PAN_SPEED);
+                }
                 break;
             case 'rightArrow': // pan camera right
-                console.log(`Cam ${this.selectedCamera}: pan right.`);
-                this.cameras[this.selectedCamera - 1].panRight(this.PAN_SPEED);
+                if (this.#isLive(this.selectedCamera)) {
+                    console.log(`Cam ${this.selectedCamera}: pan right.`);
+                    this.cameras[this.selectedCamera - 1].panRight(this.PAN_SPEED);
+                }
                 break;
             case 'end': // stop camera movement
                 if (this.modifier) {
@@ -145,26 +159,62 @@ export default class sancProfile {
                     // this.cameras[this.selectedCamera - 1]. //stop zoom
                 }
                 break;
-            case 'period': //turn on
-                this.queue = true;
-                console.log(`Queue mode: ${this.queue}`);
-                break;
+            // case 'period': //turn on
+            //     this.queue = true;
+            //     console.log(`Queue mode: ${this.queue}`);
+            //     break;
             case 'enter': //run queue
-                console.log(`Cam ${this.selectedQueueCamera}: running queue.`);
-                this.cameras[this.selectedQueueCamera - 1].recallPreset(this.selectedQueuePreset);
+                console.log("cut");
+                this.atem[0].cut(0);
+                break;
+            case 'subtract': // dissolve into propresenter
+                console.log("disolve into propresenter");
+                this.atem[0].changePreviewInput(7, 0);
+                setTimeout(() => {
+                    this.atem[0].autoTransition(0);
+                }, 200);
+                break;
+            case 'add': // dissolve
+                console.log("dissolve");
+                this.atem[0].autoTransition(0);
+                break;
+            case 'openParen': //preview mid cam
+                console.log(`Cam Mid: preview.`);
+                this.atem[0].changePreviewInput(1, 0);
+                break;
+            case 'closeParen': //preview Left cam
+                console.log(`Cam Left: preview.`);
+                this.atem[0].changePreviewInput(2, 0);
+                break;
+            case 'calc': //preview right cam
+                console.log(`Cam Right: preview.`);
+                this.atem[0].changePreviewInput(3, 0);
+                break;
+            case 'backspace': //preview propresenter
+                console.log(`ProPresenter: preview.`);
+                this.atem[0].changePreviewInput(7, 0);
                 break;
             case 'numLock': //select cam 1
                 this.selectedCamera = 1;
+                if (this.selectLink) {
+                    this.atem[0].changePreviewInput(1, 0);
+                }
                 // this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 18 }, 0);
                 console.log(`Cam ${this.selectedCamera}: selected.`);
                 break;
             case 'divide': //select cam 2
                 this.selectedCamera = 2;
+                if (this.selectLink) {
+                    this.atem[0].changePreviewInput(2, 0);
+                }
                 // this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 19 }, 0);
                 console.log(`Cam ${this.selectedCamera}: selected.`);
                 break;
             case 'multiply': //select cam 3
                 // this.selectedCamera = 3;
+                if (this.selectLink) {
+                    this.atem[0].changePreviewInput(3, 0);
+                }
                 // // this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 20 }, 0);
                 // console.log(`Cam ${this.selectedCamera}: selected.`);
                 break;
@@ -200,12 +250,16 @@ export default class sancProfile {
                 this.modifier = true;
                 break;
             case 'pgUp': //zoom in
-                console.log(`Cam ${this.selectedCamera}: zoom in.`);
-                //this.cameras[this.selectedCamera - 1].zoomIn();
+                if (this.#isLive(this.selectedCamera)) {
+                    console.log(`Cam ${this.selectedCamera}: zoom in.`);
+                    this.cameras[this.selectedCamera - 1].zoomIn(this.ZOOM_SPEED);
+                }
                 break;
             case 'pgDn': //zoom out
-                //console.log(`Cam ${this.selectedCamera}: zoom out.`);
-                this.cameras[this.selectedCamera - 1].zoomOut();
+                if (this.#isLive(this.selectedCamera)) {
+                    //console.log(`Cam ${this.selectedCamera}: zoom out.`);
+                    this.cameras[this.selectedCamera - 1].zoomOut(this.ZOOM_SPEED);
+                }
                 break;
             case 'zero':
                 //save modifier
