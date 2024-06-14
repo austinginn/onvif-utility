@@ -53,17 +53,22 @@ export default class vbProfile {
             const errorHandlerAtem = error => {
                 console.error('Error:', error);
             }
+            const stateChangedHandler = (state, pathToChange) => {
+                console.log('stateChanged', pathToChange, state);
+            };
 
             const switcherPromise = new Promise((resolve, reject) => {
                 const connectedHandler = () => {
                     console.log('Connected to ATEM Switcher');
                     atem.removeListener('error', errorHandlerAtem);
                     atem.removeListener('connected', connectedHandler);
+                    atem.removeListener('stateChanged', stateChangedHandler);
                     resolve(atem);
                 }
 
                 atem.on('error', errorHandlerAtem);
                 atem.on('connected', connectedHandler);
+                atem.on('stateChanged', stateChangedHandler);
                 atem.connect(conf[i].ip);
             });
 
@@ -93,20 +98,28 @@ export default class vbProfile {
                 }
                 break;
             case 'upArrow': // tilt camera up
-                console.log(`Cam ${this.selectedCamera}: tilt up.`);
-                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010301FF');
+                if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
+                    console.log(`Cam ${this.selectedCamera}: tilt up.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010301FF');
+                }
                 break;
             case 'downArrow': // tilt camera down
-                console.log(`Cam ${this.selectedCamera}: tilt down.`);
-                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010302FF');
+                if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
+                    console.log(`Cam ${this.selectedCamera}: tilt down.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010302FF');
+                }
                 break;
             case 'leftArrow': // pan camera left
-                console.log(`Cam ${this.selectedCamera}: pan left.`);
-                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010103FF');
+                if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
+                    console.log(`Cam ${this.selectedCamera}: pan left.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010103FF');
+                }
                 break;
             case 'rightArrow': // pan camera right
-                console.log(`Cam ${this.selectedCamera}: pan right.`);
-                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010203FF');
+                if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
+                    console.log(`Cam ${this.selectedCamera}: pan right.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010203FF');
+                }
                 break;
             case 'end': // stop camera movement
                 if (this.modifier) {
@@ -121,14 +134,14 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101040700FF'); //stop zoom
                 }
                 break;
-            case 'period': //turn on
-                this.queue = true;
-                console.log(`Queue mode: ${this.queue}`);
-                break;
-            case 'enter': //run queue
-                console.log(`Cam ${this.selectedQueueCamera}: running queue.`);
-                this.cameras[this.selectedQueueCamera - 1].recallPreset(this.selectedQueuePreset);
-                break;
+            // case 'period': //turn on
+            //     this.queue = true;
+            //     console.log(`Queue mode: ${this.queue}`);
+            //     break;
+            // case 'enter': //run queue
+            //     console.log(`Cam ${this.selectedQueueCamera}: running queue.`);
+            //     this.cameras[this.selectedQueueCamera - 1].recallPreset(this.selectedQueuePreset);
+            //     break;
             case 'numLock': //select cam 1
                 this.selectedCamera = 1;
                 this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 18 }, 0);
@@ -143,6 +156,37 @@ export default class vbProfile {
                 this.selectedCamera = 3;
                 this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 20 }, 0);
                 console.log(`Cam ${this.selectedCamera}: selected.`);
+                break;
+            case 'subtract': //disolve into propresenter
+                console.log("disolve into propresenter");
+                this.atem[0].changePreviewInput(1);
+                setTimeout(() => {
+                    this.atem[0].autoTransition(0);
+                }, 200);
+                break;
+            case 'add': //dissolve
+                console.log("dissolve");
+                this.atem[0].autoTransition(0);
+                break;
+            case 'enter': //cut
+                console.log("cut");
+                this.atem[0].cut(0);
+                break;
+            case 'openParen': //preview left cam
+                console.log(`Cam Left: preview.`);
+                this.atem[0].changePreviewInput(1, 0);
+                break;
+            case 'closeParen': //preview center cam
+                console.log(`Cam Center: preview.`);
+                this.atem[0].changePreviewInput(2, 0);
+                break;
+            case 'calc': //preview right cam
+                console.log(`Cam Right: preview.`);
+                this.atem[0].changePreviewInput(3, 0);
+                break;
+            case 'backspace': //preview propresenter
+                console.log(`ProPresenter: preview.`);
+                this.atem[0].changePreviewInput(4, 0);
                 break;
             case 'one': //preset one
                 if (this.saveModifier) {
@@ -319,12 +363,16 @@ export default class vbProfile {
                 this.modifier = true;
                 break;
             case 'pgUp': //zoom in
-                console.log(`Cam ${this.selectedCamera}: zoom in.`);
-                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101040720FF');
+                if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
+                    console.log(`Cam ${this.selectedCamera}: zoom in.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101040720FF');
+                }
                 break;
             case 'pgDn': //zoom out
-                console.log(`Cam ${this.selectedCamera}: zoom out.`);
-                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101040730FF');
+                if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
+                    console.log(`Cam ${this.selectedCamera}: zoom out.`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101040730FF');
+                }
                 break;
             case 'zero':
                 //save modifier
