@@ -114,7 +114,7 @@ class PanasonicController extends EventEmitter {
     }
 
     async stopZ() {
-        const res = await fetch(`${this.url}%23ZS50&res=1`);
+        const res = await fetch(`${this.url}%23Z50&res=1`);
         if(!res.ok){
             console.error(`HTTP error! status: ${res.status}`);
             return false;
@@ -152,7 +152,7 @@ class PanasonicController extends EventEmitter {
     }
 
     async home(){
-        const res = await fetch(`${this.url}%23APC8008000&res=1`);
+        const res = await fetch(`${this.url}%23APC80008000&res=1`);
         if(!res.ok){
             console.error(`HTTP error! status: ${res.status}`);
             return false;
