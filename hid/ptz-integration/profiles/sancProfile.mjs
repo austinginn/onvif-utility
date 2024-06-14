@@ -20,6 +20,9 @@ export default class sancProfile {
     async connectToDevices() {
         this.cameras = this.#initPanasonic(this.cameraConfig);
         this.atem = await this.#initAtem(this.switcherConfig);
+        this.atem[0].on('stateChanged', (state, pathToChange) => {
+            console.log('stateChanged', state, pathToChange);
+        });
         return;
     }
 

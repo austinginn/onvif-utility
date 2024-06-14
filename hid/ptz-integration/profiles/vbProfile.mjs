@@ -13,12 +13,16 @@ export default class vbProfile {
         this.saveModifier = false; //save modifier key status
         this.cameraConfig = vbConfig.cameras;
         this.switcherConfig = vbConfig.switchers;
+        this.selectLink = false;
     }
 
     async connectToDevices() {
         this.cameras = this.#initVisca(this.cameraConfig);
         this.atem = await this.#initAtem(this.switcherConfig);
         console.log(this.atem[0].state.video.mixEffects[0].programInput);
+        // this.atem[0].on('stateChanged', (state, pathToChange) => {
+        //     console.log('stateChanged', pathToChange, state);
+        // });
         return;
     }
 
@@ -144,22 +148,31 @@ export default class vbProfile {
             //     break;
             case 'numLock': //select cam 1
                 this.selectedCamera = 1;
+                if(this.selectLink){
+                    this.atem[0].changePreviewInput(1, 0);
+                }
                 this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 18 }, 0);
                 console.log(`Cam ${this.selectedCamera}: selected.`);
                 break;
             case 'divide': //select cam 2
                 this.selectedCamera = 2;
+                if(this.selectLink){
+                    this.atem[0].changePreviewInput(2, 0);
+                }
                 this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 19 }, 0);
                 console.log(`Cam ${this.selectedCamera}: selected.`);
                 break;
             case 'multiply': //select cam 3
                 this.selectedCamera = 3;
+                if(this.selectLink){
+                    this.atem[0].changePreviewInput(3, 0);
+                }
                 this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 20 }, 0);
                 console.log(`Cam ${this.selectedCamera}: selected.`);
                 break;
             case 'subtract': //disolve into propresenter
                 console.log("disolve into propresenter");
-                this.atem[0].changePreviewInput(1);
+                this.atem[0].changePreviewInput(7, 0);
                 setTimeout(() => {
                     this.atem[0].autoTransition(0);
                 }, 200);
@@ -172,12 +185,12 @@ export default class vbProfile {
                 console.log("cut");
                 this.atem[0].cut(0);
                 break;
-            case 'openParen': //preview left cam
-                console.log(`Cam Left: preview.`);
+            case 'openParen': //preview mid cam
+                console.log(`Cam Mid: preview.`);
                 this.atem[0].changePreviewInput(1, 0);
                 break;
-            case 'closeParen': //preview center cam
-                console.log(`Cam Center: preview.`);
+            case 'closeParen': //preview Left cam
+                console.log(`Cam Left: preview.`);
                 this.atem[0].changePreviewInput(2, 0);
                 break;
             case 'calc': //preview right cam
@@ -186,7 +199,7 @@ export default class vbProfile {
                 break;
             case 'backspace': //preview propresenter
                 console.log(`ProPresenter: preview.`);
-                this.atem[0].changePreviewInput(4, 0);
+                this.atem[0].changePreviewInput(7, 0);
                 break;
             case 'one': //preset one
                 if (this.saveModifier) {
@@ -368,7 +381,7 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101040720FF');
                 }
                 break;
-            case 'pgDn': //zoom out
+            case 'pgDown': //zoom out
                 if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                     console.log(`Cam ${this.selectedCamera}: zoom out.`);
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101040730FF');
@@ -378,6 +391,10 @@ export default class vbProfile {
                 //save modifier
                 this.saveModifier = true;
                 console.log('Save modifier pressed.');
+                break;
+            case 'equals':
+                this.selectLink = !this.selectLink;
+                console.log(`Link: ${this.selectLink}`);
                 break;
             default:
                 break;
