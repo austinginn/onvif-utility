@@ -138,7 +138,7 @@ export default class sancProfile {
                     }
                 } else {
                     console.log(`Cam ${this.selectedCamera}: stopping.`);
-                    this.cameras[this.selectedCamera - 1].stop(); //stop pt
+                    this.cameras[this.selectedCamera - 1].stopPT(); //stop pt
                     // this.cameras[this.selectedCamera - 1]. //stop zoom
                 }
                 break;
