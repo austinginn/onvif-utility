@@ -16,7 +16,9 @@ export default class sancProfile {
         this.TILT_SPEED = sanctuaryConfig.TILT_SPEED;
         this.PAN_SPEED = sanctuaryConfig.PAN_SPEED;
         this.ZOOM_SPEED = sanctuaryConfig.ZOOM_SPEED;
+        this.PAN_WAIT = 2000;
         this.selectLink = false;
+        this.macros = false;
     }
 
     async connectToDevices() {
@@ -75,7 +77,7 @@ export default class sancProfile {
         if (cameraToAtemMap[selected] === this.atem[0].state.video.mixEffects[0].programInput) {
             console.log("Camera is live");
             return true;
-            
+
         }
         console.log("Camera is not live");
         return false;
@@ -166,7 +168,7 @@ export default class sancProfile {
             //     this.queue = true;
             //     console.log(`Queue mode: ${this.queue}`);
             //     break;
-            case 'enter': //run queue
+            case 'enter': //cut me1
                 console.log("cut");
                 this.atem[0].cut(0);
                 break;
@@ -178,6 +180,12 @@ export default class sancProfile {
                 }, 200);
                 break;
             case 'add': // dissolve
+                if (this.modifier) {
+                    //dissolve me2
+                    console.log("ME2 AUTO");
+                    this.atem[0].autoTransition(1);
+                    break;
+                }
                 console.log("dissolve");
                 this.atem[0].autoTransition(0);
                 break;
@@ -222,31 +230,123 @@ export default class sancProfile {
                 // console.log(`Cam ${this.selectedCamera}: selected.`);
                 break;
             case 'one': //preset one
+                if (this.macros) {
+                    console.log('Recalling Macro 1');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(0);
+                    break;
+                }
                 this.#handlePreset(1);
                 break;
             case 'two': //preset two
+                if (this.macros) {
+                    console.log('Recalling Macro 2');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(1);
+                    break;
+                }
                 this.#handlePreset(2);
                 break;
             case 'three': //preset three
+                if (this.macros) {
+                    console.log('Recalling Macro 3');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(2);
+                    break;
+                }
                 this.#handlePreset(3);
                 break;
             case 'four': //preset four
+                if (this.macros) {
+                    console.log('Recalling Macro 4');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(3);
+                    break;
+                }
                 this.#handlePreset(4);
                 break;
             case 'five': //preset five
+                if (this.macros) {
+                    console.log('Recalling Macro 5');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(4);
+                    break;
+                }
                 this.#handlePreset(5);
                 break;
             case 'six': //preset six
+                if (this.macros) {
+                    console.log('Recalling Macro 6');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(5);
+                    break;
+                }
                 this.#handlePreset(6);
                 break;
             case 'seven': //preset seven
+                if (this.macros) {
+                    console.log('Recalling Macro 7');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(6);
+                    break;
+                }
                 this.#handlePreset(7);
                 break;
-            case 'eight': //preset eight
+            case 'eight': //preset eight' auto choir pans
+                if (this.macros) {
+                    console.log('Recalling Macro 8');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(7);
+                    break;
+                }
                 this.#handlePreset(8);
+
+                //if modifier key is pressed start right pan
+                if (!this.#isLive(this.selectedCamera)) {
+                    if (this.modifier) {
+                        setTimeout(() => {
+                            console.log(`Cam ${this.selectedCamera}: pan right.`);
+                            this.cameras[this.selectedCamera - 1].panRight(this.PAN_SPEED);
+                        }, this.PAN_WAIT);
+                    }
+                }
                 break;
             case 'nine': //preset nine
+                if (this.macros) {
+                    console.log('Recalling Macro 9');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(8);
+                    break;
+                }
                 this.#handlePreset(9);
+
+                //if modifier key is pressed start left pan
+                if (!this.#isLive(this.selectedCamera)) {
+                    if (this.modifier) {
+                        setTimeout(() => {
+                            console.log(`Cam ${this.selectedCamera}: pan left.`);
+                            this.cameras[this.selectedCamera - 1].panLeft(this.PAN_SPEED);
+                        }, this.PAN_WAIT);
+                    }
+                }
                 break;
             case 'tab': //modifier key
                 console.log('Modifier key pressed.')
@@ -269,6 +369,15 @@ export default class sancProfile {
                 this.saveModifier = true;
                 console.log('Save modifier pressed.');
                 break;
+
+            case 'escape':
+                console.log('macro mode on');
+                this.macros = true;
+                break;
+            case 'delete':
+                console.log('Reset USK');
+                this.atem[0].macroRun(18);
+                break;
             default:
                 break;
         }
@@ -276,6 +385,10 @@ export default class sancProfile {
 
     handleKeyrelease(key) {
         switch (key) {
+            case 'escape':
+                console.log('macro mode off');
+                this.macros = false;
+                break;
             case 'tab': //modifier key
                 console.log('Modifier key released.')
                 this.modifier = false;

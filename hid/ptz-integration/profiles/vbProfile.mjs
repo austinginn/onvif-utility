@@ -14,6 +14,8 @@ export default class vbProfile {
         this.cameraConfig = vbConfig.cameras;
         this.switcherConfig = vbConfig.switchers;
         this.selectLink = false;
+        this.PAN_WAIT = 2000;
+        this.macros = false;
     }
 
     async connectToDevices() {
@@ -178,6 +180,11 @@ export default class vbProfile {
                 }, 200);
                 break;
             case 'add': //dissolve
+                if(this.modifier){
+                    console.log("dissolving ME2");
+                    this.atem[0].autoTransition(1);
+                    break
+                }
                 console.log("dissolve");
                 this.atem[0].autoTransition(0);
                 break;
@@ -208,6 +215,14 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0101FF');
                     break;
                 }
+                if(this.macros){
+                    console.log('Recalling Macro 1');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(0);
+                    break;
+                }
                 if (!this.queue) {
                     if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 1.`);
@@ -225,6 +240,14 @@ export default class vbProfile {
                     //save preset
                     console.log(`Cam ${this.selectedCamera}: saving to preset 2.`);
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0102FF');
+                    break;
+                }
+                if(this.macros){
+                    console.log('Recalling Macro 2');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(1);
                     break;
                 }
                 if (!this.queue) {
@@ -247,6 +270,14 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0103FF');
                     break;
                 }
+                if(this.macros){
+                    console.log('Recalling Macro 3');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(2);
+                    break;
+                }
                 if (!this.queue) {
                     if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 3.`);
@@ -266,6 +297,14 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0104FF');
                     break;
                 }
+                if(this.macros){
+                    console.log('Recalling Macro 4');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(3);
+                    break;
+                }
                 if (!this.queue) {
                     if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 4.`);
@@ -282,6 +321,14 @@ export default class vbProfile {
                     //save preset
                     console.log(`Cam ${this.selectedCamera}: saving to preset 5.`);
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0105FF');
+                    break;
+                }
+                if(this.macros){
+                    console.log('Recalling Macro 5');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(4);
                     break;
                 }
                 if (!this.queue) {
@@ -303,6 +350,14 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0106FF');
                     break;
                 }
+                if(this.macros){
+                    console.log('Recalling Macro 6');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(5);
+                    break;
+                }
                 if (!this.queue) {
                     if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 6.`);
@@ -320,6 +375,14 @@ export default class vbProfile {
                     //save preset
                     console.log(`Cam ${this.selectedCamera}: saving to preset 7.`);
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0107FF');
+                    break;
+                }
+                if(this.macros){
+                    console.log('Recalling Macro 7');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(6);
                     break;
                 }
                 if (!this.queue) {
@@ -341,10 +404,25 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0108FF');
                     break;
                 }
+                if(this.macros){
+                    console.log('Recalling Macro 8');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(7);
+                    break;
+                }
                 if (!this.queue) {
                     if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 8.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(8);
+
+                        if(this.modifier){
+                            setTimeout(() => {
+                                console.log(`Cam ${this.selectedCamera}: pan right.`)
+                                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010203FF');
+                            }, this.PAN_WAIT);
+                        }
                     }
                 } else {
                     console.log(`Cam ${this.selectedCamera}: preset 8 queued.`);
@@ -359,10 +437,25 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0109FF');
                     break;
                 }
+                if(this.macros){
+                    console.log('Recalling Macro 9');
+                    //check whats on program and set preview to program
+                    const program = this.atem[0].state.video.mixEffects[0].programInput;
+                    this.atem[0].changePreviewInput(program, 0);
+                    this.atem[0].macroRun(8);
+                    break;
+                }
                 if (!this.queue) {
                     if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 9.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(9);
+
+                        if(this.modifier){
+                            setTimeout(() => {
+                                console.log(`Cam ${this.selectedCamera}: pan left.`)
+                                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010103FF');
+                            }, this.PAN_WAIT);
+                        }
                     }
 
                 } else {
@@ -387,6 +480,10 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101040730FF');
                 }
                 break;
+            case 'delete': //reset usk
+                console.log('Reset USK');
+                this.atem[0].macroRun(18)
+                break;
             case 'zero':
                 //save modifier
                 this.saveModifier = true;
@@ -396,6 +493,9 @@ export default class vbProfile {
                 this.selectLink = !this.selectLink;
                 console.log(`Link: ${this.selectLink}`);
                 break;
+            case 'escape':
+                //macro modifier
+                this.macros = true;
             default:
                 break;
         }
@@ -412,10 +512,10 @@ export default class vbProfile {
                 this.saveModifier = false;
                 console.log('Save modifier released.');
                 break;
-            case 'period':
-                this.queue = false;
-                console.log("Queue mode off.");
-                break;
+            case 'escape':
+                //macro modifier
+                this.macros = false;
+                console.log('macro mode off');
             default:
                 break;
         }

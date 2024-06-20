@@ -20,6 +20,7 @@ class PanasonicController extends EventEmitter {
     // Function to recall a specific preset
     async recallPreset(presetNumber) {
         // Ensure presetNumber is always two digits
+        presetNumber = presetNumber - 1;
         const paddedPresetNumber = String(presetNumber).padStart(2, '0');
         console.log(paddedPresetNumber);
         console.log(`${this.url}%23R${paddedPresetNumber}&res=1`)
@@ -33,7 +34,7 @@ class PanasonicController extends EventEmitter {
 
     async savePreset(presetNumber) {
         // Ensure presetNumber is always two digits
-        const paddedPresetNumber = String(presetNumber).padStart(2, '0');
+        const paddedPresetNumber = String(presetNumber -1).padStart(2, '0');
         const res = await fetch(`${this.url}%23M${paddedPresetNumber}&res=1`)
         if(!res.ok){
             console.error(`HTTP error! status: ${res.status}`);
