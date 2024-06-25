@@ -224,7 +224,7 @@ export default class sancProfile {
             case 'multiply': //select cam 3
                 // this.selectedCamera = 3;
                 if (this.selectLink) {
-                    this.atem[0].changePreviewInput(3, 0);
+                    this.atem[0].changePreviewInput(6, 0);
                 }
                 // // this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 20 }, 0);
                 // console.log(`Cam ${this.selectedCamera}: selected.`);
