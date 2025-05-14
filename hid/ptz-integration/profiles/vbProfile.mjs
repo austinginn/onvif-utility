@@ -106,13 +106,13 @@ export default class vbProfile {
             case 'upArrow': // tilt camera up
                 if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                     console.log(`Cam ${this.selectedCamera}: tilt up.`);
-                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010301FF');
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060100000301FF');
+                    // 8x 01 06 01 VV WW 03 01 FF
                 }
-                break;
-            case 'downArrow': // tilt camera down
+                break; case 'downArrow': // tilt camera down
                 if (this.selectedCamera != this.atem[0].state.video.mixEffects[0].programInput) {
                     console.log(`Cam ${this.selectedCamera}: tilt down.`);
-                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010302FF');
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060100000302FF');
                 }
                 break;
             case 'leftArrow': // pan camera left
@@ -150,7 +150,19 @@ export default class vbProfile {
             //     break;
             case 'numLock': //select cam 1
                 this.selectedCamera = 1;
-                if(this.selectLink){
+                //manual focus selected
+                //this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043803FF');
+
+                //auto the rest unless program?
+                //if (this.atem[0].state.video.mixEffects[0].programInput != 2) {
+                    //this.cameras[1].sendViscaCommand('8101043802FF');
+                //}
+
+                //if (this.atem[0].state.video.mixEffects[0].programInput != 3) {
+                //    this.cameras[2].sendViscaCommand('8101043802FF');
+                //}
+
+                if (this.selectLink) {
                     this.atem[0].changePreviewInput(1, 0);
                 }
                 this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 18 }, 0);
@@ -158,7 +170,19 @@ export default class vbProfile {
                 break;
             case 'divide': //select cam 2
                 this.selectedCamera = 2;
-                if(this.selectLink){
+
+                //manual focus selected
+                //this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043803FF');
+
+                //auto the rest unless program?
+                //if (this.atem[0].state.video.mixEffects[0].programInput != 1) {
+                //    this.cameras[0].sendViscaCommand('8101043802FF');
+                //}
+
+                //if (this.atem[0].state.video.mixEffects[0].programInput != 3) {
+                //    this.cameras[2].sendViscaCommand('8101043802FF');
+                //}
+                if (this.selectLink) {
                     this.atem[0].changePreviewInput(2, 0);
                 }
                 this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 19 }, 0);
@@ -166,7 +190,20 @@ export default class vbProfile {
                 break;
             case 'multiply': //select cam 3
                 this.selectedCamera = 3;
-                if(this.selectLink){
+
+                //manual focus selected
+                //this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043803FF');
+
+                //auto the rest unless program?
+                //if (this.atem[0].state.video.mixEffects[0].programInput != 1) {
+                //    this.cameras[0].sendViscaCommand('8101043802FF');
+                //}
+
+                //if (this.atem[0].state.video.mixEffects[0].programInput != 2) {
+                //    this.cameras[1].sendViscaCommand('8101043802FF');
+                //}
+
+                if (this.selectLink) {
                     this.atem[0].changePreviewInput(3, 0);
                 }
                 this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 20 }, 0);
@@ -180,7 +217,7 @@ export default class vbProfile {
                 }, 200);
                 break;
             case 'add': //dissolve
-                if(this.modifier){
+                if (this.modifier) {
                     console.log("dissolving ME2");
                     this.atem[0].autoTransition(1);
                     break
@@ -206,7 +243,7 @@ export default class vbProfile {
                 break;
             case 'backspace': //preview propresenter
                 console.log(`ProPresenter: preview.`);
-                this.atem[0].changePreviewInput(7, 0);
+                this.atem[0].changePreviewInput(4, 0);
                 break;
             case 'one': //preset one
                 if (this.saveModifier) {
@@ -215,7 +252,7 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0101FF');
                     break;
                 }
-                if(this.macros){
+                if (this.macros) {
                     console.log('Recalling Macro 1');
                     //check whats on program and set preview to program
                     const program = this.atem[0].state.video.mixEffects[0].programInput;
@@ -242,7 +279,7 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0102FF');
                     break;
                 }
-                if(this.macros){
+                if (this.macros) {
                     console.log('Recalling Macro 2');
                     //check whats on program and set preview to program
                     const program = this.atem[0].state.video.mixEffects[0].programInput;
@@ -270,7 +307,7 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0103FF');
                     break;
                 }
-                if(this.macros){
+                if (this.macros) {
                     console.log('Recalling Macro 3');
                     //check whats on program and set preview to program
                     const program = this.atem[0].state.video.mixEffects[0].programInput;
@@ -297,7 +334,7 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0104FF');
                     break;
                 }
-                if(this.macros){
+                if (this.macros) {
                     console.log('Recalling Macro 4');
                     //check whats on program and set preview to program
                     const program = this.atem[0].state.video.mixEffects[0].programInput;
@@ -323,7 +360,7 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0105FF');
                     break;
                 }
-                if(this.macros){
+                if (this.macros) {
                     console.log('Recalling Macro 5');
                     //check whats on program and set preview to program
                     const program = this.atem[0].state.video.mixEffects[0].programInput;
@@ -350,7 +387,7 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0106FF');
                     break;
                 }
-                if(this.macros){
+                if (this.macros) {
                     console.log('Recalling Macro 6');
                     //check whats on program and set preview to program
                     const program = this.atem[0].state.video.mixEffects[0].programInput;
@@ -377,7 +414,7 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0107FF');
                     break;
                 }
-                if(this.macros){
+                if (this.macros) {
                     console.log('Recalling Macro 7');
                     //check whats on program and set preview to program
                     const program = this.atem[0].state.video.mixEffects[0].programInput;
@@ -404,7 +441,7 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0108FF');
                     break;
                 }
-                if(this.macros){
+                if (this.macros) {
                     console.log('Recalling Macro 8');
                     //check whats on program and set preview to program
                     const program = this.atem[0].state.video.mixEffects[0].programInput;
@@ -417,7 +454,7 @@ export default class vbProfile {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 8.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(8);
 
-                        if(this.modifier){
+                        if (this.modifier) {
                             setTimeout(() => {
                                 console.log(`Cam ${this.selectedCamera}: pan right.`)
                                 this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010203FF');
@@ -437,7 +474,7 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0109FF');
                     break;
                 }
-                if(this.macros){
+                if (this.macros) {
                     console.log('Recalling Macro 9');
                     //check whats on program and set preview to program
                     const program = this.atem[0].state.video.mixEffects[0].programInput;
@@ -450,7 +487,7 @@ export default class vbProfile {
                         console.log(`Cam ${this.selectedCamera}: recalling preset 9.`);
                         this.cameras[this.selectedCamera - 1].recallPreset(9);
 
-                        if(this.modifier){
+                        if (this.modifier) {
                             setTimeout(() => {
                                 console.log(`Cam ${this.selectedCamera}: pan left.`)
                                 this.cameras[this.selectedCamera - 1].sendViscaCommand('8101060101010103FF');
