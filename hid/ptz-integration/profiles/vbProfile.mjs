@@ -140,10 +140,16 @@ export default class vbProfile {
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101040700FF'); //stop zoom
                 }
                 break;
-            // case 'period': //turn on
-            //     this.queue = true;
-            //     console.log(`Queue mode: ${this.queue}`);
-            //     break;
+            case 'period': //turn on
+                if(this.modifier) {
+                    console.log(`Autofocus Off`);
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043803FF');
+                } else {
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043802FF');
+                }
+                console.log(`Autofocus On`);
+                
+                break;
             // case 'enter': //run queue
             //     console.log(`Cam ${this.selectedQueueCamera}: running queue.`);
             //     this.cameras[this.selectedQueueCamera - 1].recallPreset(this.selectedQueuePreset);
