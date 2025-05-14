@@ -151,16 +151,16 @@ export default class vbProfile {
             case 'numLock': //select cam 1
                 this.selectedCamera = 1;
                 //manual focus selected
-                //this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043803FF');
+                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043803FF');
 
                 //auto the rest unless program?
-                //if (this.atem[0].state.video.mixEffects[0].programInput != 2) {
-                    //this.cameras[1].sendViscaCommand('8101043802FF');
-                //}
+                if (this.atem[0].state.video.mixEffects[0].programInput != 2) {
+                this.cameras[1].sendViscaCommand('8101043802FF');
+                }
 
-                //if (this.atem[0].state.video.mixEffects[0].programInput != 3) {
-                //    this.cameras[2].sendViscaCommand('8101043802FF');
-                //}
+                if (this.atem[0].state.video.mixEffects[0].programInput != 3) {
+                   this.cameras[2].sendViscaCommand('8101043802FF');
+                }
 
                 if (this.selectLink) {
                     this.atem[0].changePreviewInput(1, 0);
@@ -172,16 +172,16 @@ export default class vbProfile {
                 this.selectedCamera = 2;
 
                 //manual focus selected
-                //this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043803FF');
+                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043803FF');
 
                 //auto the rest unless program?
-                //if (this.atem[0].state.video.mixEffects[0].programInput != 1) {
-                //    this.cameras[0].sendViscaCommand('8101043802FF');
-                //}
+                if (this.atem[0].state.video.mixEffects[0].programInput != 1) {
+                   this.cameras[0].sendViscaCommand('8101043802FF');
+                }
 
-                //if (this.atem[0].state.video.mixEffects[0].programInput != 3) {
-                //    this.cameras[2].sendViscaCommand('8101043802FF');
-                //}
+                if (this.atem[0].state.video.mixEffects[0].programInput != 3) {
+                   this.cameras[2].sendViscaCommand('8101043802FF');
+                }
                 if (this.selectLink) {
                     this.atem[0].changePreviewInput(2, 0);
                 }
@@ -192,16 +192,16 @@ export default class vbProfile {
                 this.selectedCamera = 3;
 
                 //manual focus selected
-                //this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043803FF');
+                this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043803FF');
 
                 //auto the rest unless program?
-                //if (this.atem[0].state.video.mixEffects[0].programInput != 1) {
-                //    this.cameras[0].sendViscaCommand('8101043802FF');
-                //}
+                if (this.atem[0].state.video.mixEffects[0].programInput != 1) {
+                   this.cameras[0].sendViscaCommand('8101043802FF');
+                }
 
-                //if (this.atem[0].state.video.mixEffects[0].programInput != 2) {
-                //    this.cameras[1].sendViscaCommand('8101043802FF');
-                //}
+                if (this.atem[0].state.video.mixEffects[0].programInput != 2) {
+                   this.cameras[1].sendViscaCommand('8101043802FF');
+                }
 
                 if (this.selectLink) {
                     this.atem[0].changePreviewInput(3, 0);
@@ -249,6 +249,8 @@ export default class vbProfile {
                 if (this.saveModifier) {
                     //save preset
                     console.log(`Cam ${this.selectedCamera}: saving to preset 1.`);
+                    //Set Autofocus before saving
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043802FF');
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0101FF');
                     break;
                 }
@@ -276,6 +278,8 @@ export default class vbProfile {
                 if (this.saveModifier) {
                     //save preset
                     console.log(`Cam ${this.selectedCamera}: saving to preset 2.`);
+                    //Set Autofocus before saving
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043802FF');
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0102FF');
                     break;
                 }
@@ -304,6 +308,8 @@ export default class vbProfile {
                 if (this.saveModifier) {
                     //save preset
                     console.log(`Cam ${this.selectedCamera}: saving to preset 3.`);
+                    //Set Autofocus before saving
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043802FF');
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0103FF');
                     break;
                 }
@@ -331,6 +337,8 @@ export default class vbProfile {
                 if (this.saveModifier) {
                     //save preset
                     console.log(`Cam ${this.selectedCamera}: saving to preset 4.`);
+                    //Set Autofocus before saving
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043802FF');
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0104FF');
                     break;
                 }
@@ -357,6 +365,8 @@ export default class vbProfile {
                 if (this.saveModifier) {
                     //save preset
                     console.log(`Cam ${this.selectedCamera}: saving to preset 5.`);
+                    //Set Autofocus before saving
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043802FF');
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0105FF');
                     break;
                 }
@@ -384,6 +394,8 @@ export default class vbProfile {
                 if (this.saveModifier) {
                     //save preset
                     console.log(`Cam ${this.selectedCamera}: saving to preset 6.`);
+                    //Set Autofocus before saving
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043802FF');
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0106FF');
                     break;
                 }
@@ -411,6 +423,8 @@ export default class vbProfile {
                 if (this.saveModifier) {
                     //save preset
                     console.log(`Cam ${this.selectedCamera}: saving to preset 7.`);
+                    //Set Autofocus before saving
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043802FF');
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0107FF');
                     break;
                 }
@@ -438,6 +452,8 @@ export default class vbProfile {
                 if (this.saveModifier) {
                     //save preset
                     console.log(`Cam ${this.selectedCamera}: saving to preset 8.`);
+                    //Set Autofocus before saving
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043802FF');
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0108FF');
                     break;
                 }
@@ -471,6 +487,8 @@ export default class vbProfile {
                 if (this.saveModifier) {
                     //save preset
                     console.log(`Cam ${this.selectedCamera}: saving to preset 9.`);
+                    //Set Autofocus before saving
+                    this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043802FF');
                     this.cameras[this.selectedCamera - 1].sendViscaCommand('8101043F0109FF');
                     break;
                 }
