@@ -9,6 +9,11 @@ export const sanctuaryConfig = {
             name: "Right Cam",
             ip: "192.168.42.2",
             protocol: "panasonic"
+        },
+        {
+            name: "Center Cam",
+            ip: "192.168.42.4",
+            protocol: "panasonic"
         }
     ],
     switchers: [

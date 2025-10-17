@@ -71,7 +71,8 @@ export default class sancProfile {
     #isLive(selected) {
         const cameraToAtemMap = {
             1: 3,
-            2: 5
+            2: 5,
+            3: 4,
         }
 
         if (cameraToAtemMap[selected] === this.atem[0].state.video.mixEffects[0].programInput) {
@@ -205,7 +206,7 @@ export default class sancProfile {
                 console.log(`Cam Floor: preview.`);
                 this.atem[0].changePreviewInput(6, 0);
                 break;
-            case 'numLock': //select cam 1
+            case 'numLock': //select cam Left
                 this.selectedCamera = 1;
                 if (this.selectLink) {
                     this.atem[0].changePreviewInput(3, 0);
@@ -216,18 +217,18 @@ export default class sancProfile {
             case 'divide': //select cam 2
                 this.selectedCamera = 2;
                 if (this.selectLink) {
-                    this.atem[0].changePreviewInput(5, 0);
+                    this.atem[0].changePreviewInput(4, 0);
                 }
                 // this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 19 }, 0);
                 console.log(`Cam ${this.selectedCamera}: selected.`);
                 break;
             case 'multiply': //select cam 3
-                // this.selectedCamera = 3;
+                this.selectedCamera = 3;
                 if (this.selectLink) {
-                    this.atem[0].changePreviewInput(6, 0);
+                    this.atem[0].changePreviewInput(5, 0);
                 }
                 // // this.atem[0].setMediaPlayerSource({ clipIndex: 1, sourceType: 1, stillIndex: 20 }, 0);
-                // console.log(`Cam ${this.selectedCamera}: selected.`);
+                console.log(`Cam ${this.selectedCamera}: selected.`);
                 break;
             case 'one': //preset one
                 if (this.macros) {
