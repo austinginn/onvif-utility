@@ -215,7 +215,7 @@ export default class sancProfile {
                 console.log(`Cam ${this.selectedCamera}: selected.`);
                 break;
             case 'divide': //select cam 2
-                this.selectedCamera = 2;
+                this.selectedCamera = 3;
                 if (this.selectLink) {
                     this.atem[0].changePreviewInput(4, 0);
                 }
@@ -223,7 +223,7 @@ export default class sancProfile {
                 console.log(`Cam ${this.selectedCamera}: selected.`);
                 break;
             case 'multiply': //select cam 3
-                this.selectedCamera = 3;
+                this.selectedCamera = 2;
                 if (this.selectLink) {
                     this.atem[0].changePreviewInput(5, 0);
                 }
